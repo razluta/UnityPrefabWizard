@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="CS_Version" style="background-color: rgb(56, 56, 56); padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;">
+        <ui:Label text="v.0.0.1.20200706" style="-unity-text-align: upper-right; font-size: 10px; color: rgb(89, 89, 89);" />
+    </ui:VisualElement>
+</ui:UXML>
