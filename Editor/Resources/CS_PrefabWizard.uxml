@@ -1,3 +1,14 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:Label text="Raz" />
+    <ui:Template name="CS_Version" src="CS_Version.uxml" />
+    <ui:Template name="CS_SingleRule" src="CS_SingleRule.uxml" />
+    <ui:Button text="Load Rules" style="border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+    <ui:Button text="Save Rules" style="border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+    <ui:Button text="Add Rule" style="border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+    <ui:VisualElement style="border-top-color: rgba(36, 36, 36, 255); border-left-width: 0; border-right-width: 0; border-top-width: 2px; border-bottom-width: 0; margin-top: 2px; margin-bottom: 2px;" />
+    <ui:ListView focusable="True" style="flex-grow: 1; flex-shrink: 0;">
+        <ui:Instance template="CS_SingleRule" name="CS_SingleRule" />
+    </ui:ListView>
+    <ui:VisualElement style="border-top-color: rgb(36, 36, 36); border-left-width: 0; border-right-width: 0; border-top-width: 2px; border-bottom-width: 0; margin-top: 2px; margin-bottom: 2px;" />
+    <ui:Button text="Create Prefab for Selected Mesh" style="border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;" />
+    <ui:Instance template="CS_Version" name="CS_Version" />
 </ui:UXML>
