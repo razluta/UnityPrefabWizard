@@ -1,0 +1,35 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="VE_SingleRule" style="flex-grow: 1; border-left-width: 3px; border-right-width: 3px; border-top-width: 3px; border-bottom-width: 3px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; border-left-color: rgba(46, 45, 45, 255); border-right-color: rgba(46, 45, 45, 255); border-top-color: rgba(46, 45, 45, 255); border-bottom-color: rgba(46, 45, 45, 255);">
+        <ui:Label text="Prefab" style="-unity-text-align: upper-center; -unity-font-style: bold;" />
+        <ui:VisualElement name="Prefab" style="flex-grow: 0; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
+            <ui:Label text="Create a Prefab ..." />
+            <ui:VisualElement style="flex-direction: row;">
+                <ui:Toggle value="true" />
+                <ui:Label text="use mesh name" style="flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <ui:Toggle value="false" />
+                <ui:Label text="use unique name" style="flex-grow: 0; flex-shrink: 1;" />
+                <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label text="Material" style="-unity-text-align: upper-center; -unity-font-style: bold;" />
+        <ui:VisualElement name="Material" style="flex-grow: 1; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
+            <ui:VisualElement style="flex-direction: row;">
+                <ui:Toggle value="true" />
+                <ui:Label text="create a material for the mesh" style="flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row;">
+                <ui:Toggle value="true" />
+                <ui:Label text="for naming, use &lt;MeshName&gt; + " style="flex-grow: 0; flex-shrink: 1;" />
+                <ui:TextField picking-mode="Ignore" value="filler text" text="Mat" style="flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:Label text="... give it this shader ..." style="-unity-text-align: upper-left;" />
+            <uie:ObjectField />
+            <ui:VisualElement style="flex-direction: row;">
+                <ui:Toggle value="true" />
+                <ui:Label text="assign all textures that match the &lt;MeshName&gt;" style="flex-grow: 1; white-space: normal;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
