@@ -14,3 +14,10 @@ A set of Unity utility functions for automatically creating prefabs for 3D asset
       ...
   }
 }
+```
+*  *  *  *  *
+## Architecture
+Below is a high level explanation of how to tools are architected.
+
+The primary components of the tools are:
+- test
