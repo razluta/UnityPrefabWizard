@@ -23,6 +23,7 @@ namespace UnityPrefabWizard.Editor
         private int _ruleCount;
         private List<int> _availableIds;
         private Button _addRule;
+        private Button _clearRules;
 
         [MenuItem("Art Tools/Launch Prefab Wizard")]                                                                                     
         public static void ShowWindow()                                                                                                      
@@ -61,6 +62,10 @@ namespace UnityPrefabWizard.Editor
             // Add Rule Button
             _addRule = _root.Q<Button>("BT_AddRule");
             _addRule.clickable.clicked += AddNewRule;
+            
+            // Clear Rules Button
+            _clearRules = _root.Q<Button>("BT_ClearRules");
+            _clearRules.clickable.clicked += ClearRules;
         }
 
         private void AddNewRule()
@@ -100,6 +105,13 @@ namespace UnityPrefabWizard.Editor
         {
             _rulesListView.Remove(singleRule);
             _availableIds.Add(id);
+        }
+
+        private void ClearRules()
+        {
+            _rulesListView.Clear();
+            _availableIds.Clear();
+            _ruleCount = -1;
         }
 
         private int GetNextAvailableId()
