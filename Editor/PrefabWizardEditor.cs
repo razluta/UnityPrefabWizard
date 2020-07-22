@@ -89,16 +89,68 @@ namespace UnityPrefabWizard.Editor
             newRuleVisualElement.style.borderRightColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderBottomColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderLeftColor = new StyleColor(randomColor);
+            
+            // 'Name starts with' foldout
+            var nameStartsWithFoldout = _root.Q<Foldout>("FO_IncludeNameStartsWith");
+            nameStartsWithFoldout.name += id.ToString();
+            
+            // Add new field Button for 'name starts with'
+            var nameStartsWithButton = _root.Q<Button>("BT_IncludeNameStartsWith");
+            nameStartsWithButton.name += id.ToString();
+            nameStartsWithButton.clickable.clicked += () => AddNewEntryToFoldout(nameStartsWithFoldout);
+            
+            // 'Name contains' foldout
+            var nameContainsFoldout = _root.Q<Foldout>("FO_IncludeNameContains");
+            nameContainsFoldout.name += id.ToString();
 
+            // Add new field Button for 'name contains'
+            var nameContainsButton = _root.Q<Button>("BT_IncludeNameContains");
+            nameContainsButton.name += id.ToString();
+            nameContainsButton.clickable.clicked += () => AddNewEntryToFoldout(nameContainsFoldout);
+            
+            // Remove Button
             var removeButton = _root.Q<Button>("BT_Remove");
             removeButton.name += id.ToString();
             removeButton.clickable.clicked += () => RemoveRule(newRuleVisualElement, id);
             removeButton.style.backgroundColor = randomColor;
             removeButton.style.color = inverseRandomColor;
             
+            // Rule count Label
             var labelRuleNumber = _root.Q<Label>("LB_Rule");
             labelRuleNumber.name += id.ToString();
             labelRuleNumber.text += id.ToString();
+        }
+
+        private void AddNewEntryToFoldout(Foldout foldout)
+        {
+            var newIncludeNameStartsWithVisualElement = new VisualElement();
+            newIncludeNameStartsWithVisualElement.style.flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row);
+            
+            var newIncludeNameStartsWithTextField = new TextField();
+            newIncludeNameStartsWithTextField.style.flexGrow = 1;
+            
+            var newIncludeNameStartsWithButton = new Button()
+            {
+                text = "X"
+            };
+            newIncludeNameStartsWithButton.style.borderTopLeftRadius = 0;
+            newIncludeNameStartsWithButton.style.borderTopRightRadius = 0;
+            newIncludeNameStartsWithButton.style.borderBottomRightRadius = 0;
+            newIncludeNameStartsWithButton.style.borderBottomLeftRadius = 0;
+            newIncludeNameStartsWithButton.clickable.clicked += () => 
+                RemoveVisualElementFromFoldout(
+                    newIncludeNameStartsWithVisualElement,
+                    foldout);
+            
+            newIncludeNameStartsWithVisualElement.Add(newIncludeNameStartsWithButton);
+            newIncludeNameStartsWithVisualElement.Add(newIncludeNameStartsWithTextField);
+            
+            foldout.Add(newIncludeNameStartsWithVisualElement);
+        }
+        
+        private void RemoveVisualElementFromFoldout(VisualElement visualElement, Foldout foldout)
+        {
+            foldout.Remove(visualElement);
         }
 
         private void RemoveRule(VisualElement singleRule, int id)
