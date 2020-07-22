@@ -1,7 +1,18 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:VisualElement name="VE_SingleRule" style="flex-direction: row;">
+    <ui:VisualElement name="VE_SingleRule" style="flex-direction: row; border-left-color: rgba(255, 0, 0, 255); border-right-color: rgba(255, 0, 0, 255); border-top-color: rgba(255, 0, 0, 255); border-bottom-color: rgba(255, 0, 0, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;">
         <ui:Button text="X" name="BT_Remove" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-left-width: 3px; border-right-width: 1px; border-top-width: 3px; border-bottom-width: 3px; border-left-color: rgb(46, 45, 45); border-right-color: rgb(46, 45, 45); border-top-color: rgb(46, 45, 45); border-bottom-color: rgb(46, 45, 45); margin-top: 3px; margin-bottom: 3px; margin-left: 3px; margin-right: 0;" />
         <ui:VisualElement name="Rule" style="flex-grow: 1; border-left-width: 2px; border-right-width: 3px; border-top-width: 3px; border-bottom-width: 3px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-left: 0; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; border-left-color: rgb(46, 45, 45); border-right-color: rgb(46, 45, 45); border-top-color: rgb(46, 45, 45); border-bottom-color: rgb(46, 45, 45);">
+            <ui:Label text="Mesh" style="-unity-text-align: upper-center; -unity-font-style: bold;" />
+            <ui:VisualElement name="Mesh" style="flex-grow: 0; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
+                <ui:Label text="If the mesh ..." />
+                <ui:Foldout text="name starts with:" name="FO_IncludeNameStartsWith" style="margin-left: 0;">
+                    <ui:Button text="Add New Field" name="BT_IncludeNameStartsWith" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                </ui:Foldout>
+                <ui:Label text="or" style="-unity-text-align: upper-center;" />
+                <ui:Foldout text="name contains:" name="FO_IncludeNameContains" style="margin-left: 0;">
+                    <ui:Button text="Add New Field" name="BT_IncludeNameStartsWith" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                </ui:Foldout>
+            </ui:VisualElement>
             <ui:Label text="Prefab" style="-unity-text-align: upper-center; -unity-font-style: bold;" />
             <ui:VisualElement name="Prefab" style="flex-grow: 0; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
                 <ui:Label text="Create a Prefab ..." />
@@ -11,7 +22,19 @@
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="false" />
+                    <ui:Label text="use mesh name, but replace" style="flex-grow: 0; flex-shrink: 1; -unity-text-align: upper-left;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; -unity-text-align: upper-left;" />
+                    <ui:Label text="with" style="flex-grow: 0; flex-shrink: 1;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:Toggle value="false" />
                     <ui:Label text="use unique name" style="flex-grow: 0; flex-shrink: 1;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:Toggle value="false" />
+                    <ui:Label text="add suffix" style="flex-grow: 0; flex-shrink: 1;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1;" />
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -31,6 +54,10 @@
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="true" />
                     <ui:Label text="assign all textures that match the &lt;MeshName&gt;" style="flex-grow: 1; white-space: normal;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:Toggle value="true" />
+                    <ui:Label text="assign new material to the mesh" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
