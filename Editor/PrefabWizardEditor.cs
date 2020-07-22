@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityPrefabWizard.AssetUtilities;
@@ -10,7 +11,7 @@ namespace UnityPrefabWizard.Editor
         // private string _version = "v.0.0.1.20200710";
         
         private const int WindowWidth = 500;
-        private const int WindowHeight = 700;
+        private const int WindowHeight = 800;
 
         private VisualElement _root;
         private VisualTreeAsset _contents;
@@ -20,6 +21,7 @@ namespace UnityPrefabWizard.Editor
         private VisualElement _singleRuleVisualElement;
 
         private int _ruleCount;
+        private List<int> _availableIds;
         private Button _addRule;
 
         [MenuItem("Art Tools/Launch Prefab Wizard")]                                                                                     
@@ -37,7 +39,8 @@ namespace UnityPrefabWizard.Editor
                                                                                                                                              
         private void OnEnable()
         {
-            _ruleCount = 0;
+            _ruleCount = -1;
+            _availableIds = new List<int>();
             
             // Reference to the root of the window.                                                                                          
             _root = rootVisualElement;
@@ -62,30 +65,56 @@ namespace UnityPrefabWizard.Editor
 
         private void AddNewRule()
         {
+            var id = GetNextAvailableId();
+            
             _singleRuleVisualTree.CloneTree(
                 _rulesListView.hierarchy.ElementAt(0
                 ).hierarchy.ElementAt(0
                 ).hierarchy.ElementAt(0));
-            var randomColor = GeneralUtilities.GetRandomColor();
-            var newRuleVisualElement = _root.Q<VisualElement>("VE_SingleRule");
             
-            newRuleVisualElement.name += _ruleCount.ToString();
+            // Get a random color for the button and determine if the X text should be black or white
+            var randomColor = GeneralUtilities.GetRandomColor();
+            var inverseRandomColor = 
+                (randomColor.r + randomColor.g + randomColor.b) / 3 > 0.5f ? Color.black : Color.white;
+            
+            var newRuleVisualElement = _root.Q<VisualElement>("VE_SingleRule");
+
+            newRuleVisualElement.name += id.ToString();
             newRuleVisualElement.style.borderTopColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderRightColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderBottomColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderLeftColor = new StyleColor(randomColor);
 
             var removeButton = _root.Q<Button>("BT_Remove");
-            removeButton.name += _ruleCount.ToString();
-            removeButton.clickable.clicked += () => RemoveRule(newRuleVisualElement);
+            removeButton.name += id.ToString();
+            removeButton.clickable.clicked += () => RemoveRule(newRuleVisualElement, id);
             removeButton.style.backgroundColor = randomColor;
+            removeButton.style.color = inverseRandomColor;
             
-            _ruleCount++;
+            var labelRuleNumber = _root.Q<Label>("LB_Rule");
+            labelRuleNumber.name += id.ToString();
+            labelRuleNumber.text += id.ToString();
         }
 
-        private void RemoveRule(VisualElement singleRule)
+        private void RemoveRule(VisualElement singleRule, int id)
         {
             _rulesListView.Remove(singleRule);
+            _availableIds.Add(id);
+        }
+
+        private int GetNextAvailableId()
+        {
+            // If there are no available IDs, increment the max ...
+            if (_availableIds.Count == 0)
+            {
+                _ruleCount++;
+                return _ruleCount;
+            }
+
+            // If there are available IDs, return the first one and eliminate it from the list
+            var newId = _availableIds[0];
+            _availableIds.Remove(_availableIds[0]);
+            return newId;
         }
     }                                                                                                                                        
 }
