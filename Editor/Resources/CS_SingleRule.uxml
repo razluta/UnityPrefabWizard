@@ -52,6 +52,9 @@
                 </ui:VisualElement>
                 <ui:Label text="... give it this shader ..." style="-unity-text-align: upper-left;" />
                 <uie:ObjectField />
+                <ui:Foldout text="shader inputs and equivalent texture suffixes matchings" name="FO_TextureInputs" style="margin-left: 0;">
+                    <ui:Button text="Add New Field" name="BT_AddTextureInputMatching" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
+                </ui:Foldout>
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="true" />
                     <ui:Label text="assign all textures that match the &lt;MeshName&gt;" style="flex-grow: 1; white-space: normal;" />
