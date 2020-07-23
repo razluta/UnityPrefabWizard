@@ -1,7 +1,14 @@
 !!! THIS IS A WORK IN PROGRESS AND IT IS NOT CURRENTLY FUNCTIONAL !!!
 
 # UnityPrefabWizard [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg?style=flat)](http://mit-license.org)
-A set of Unity utility functions for automatically creating prefabs for 3D assets, nicely wrapped in a friendly GUI.
+This is a set of Unity utility functions for automatically creating prefabs for 3D assets (with materials and texture assignments), nicely wrapped in a friendly GUI.
+
+Verified on the following versions of Unity:
+- 2019.4
+- 2019.3
+
+![](https://github.com/razluta/UnityPrefabWizard/blob/master/Screenshots/UnityPrefabWizard.png)
+
 
 ## Setup
 ##### Option A) Clone or download the repository and drop it in your Unity project.
