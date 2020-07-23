@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,9 +10,21 @@ namespace UnityPrefabWizard.Editor
     public class PrefabWizardEditor : EditorWindow
     {
         // private string _version = "v.0.0.1.20200710";
-        
+
         private const int WindowWidth = 500;
         private const int WindowHeight = 800;
+
+        private const string ErrorTitleError = "Error";
+        private const string ErrorBodySelectOneMesh = "Please select one mesh in the project window!";
+        private const string ErrorButtonOk = "OK";
+        private readonly Dictionary<string, string> _defaultShaderPropertyToTextureSuffixMatching = 
+            new Dictionary<string, string>()
+        {
+            {"_MainTex", "_diff"}, // Albedo or diffuse texture
+            {"_SpecGlossMap", "_spec"}, // Specular texture
+            {"_BumpMap", "_norm"}, // Normal map texture
+            // ...
+        };
 
         private VisualElement _root;
         private VisualTreeAsset _contents;
@@ -24,6 +37,7 @@ namespace UnityPrefabWizard.Editor
         private List<int> _availableIds;
         private Button _addRule;
         private Button _clearRules;
+        private Button _createPrefab;
 
         [MenuItem("Art Tools/Launch Prefab Wizard")]                                                                                     
         public static void ShowWindow()                                                                                                      
@@ -66,6 +80,10 @@ namespace UnityPrefabWizard.Editor
             // Clear Rules Button
             _clearRules = _root.Q<Button>("BT_ClearRules");
             _clearRules.clickable.clicked += ClearRules;
+            
+            // Create Prefab Button
+            _createPrefab = _root.Q<Button>("BT_CreatePrefab");
+            _createPrefab.clickable.clicked += CreatePrefabForSelectedMesh;
         }
 
         private void AddNewRule()
@@ -97,7 +115,7 @@ namespace UnityPrefabWizard.Editor
             // Add new field Button for 'name starts with'
             var nameStartsWithButton = _root.Q<Button>("BT_IncludeNameStartsWith");
             nameStartsWithButton.name += id.ToString();
-            nameStartsWithButton.clickable.clicked += () => AddNewEntryToFoldout(nameStartsWithFoldout);
+            nameStartsWithButton.clickable.clicked += () => AddNewSingleEntryToFoldout(nameStartsWithFoldout);
             
             // 'Name contains' foldout
             var nameContainsFoldout = _root.Q<Foldout>("FO_IncludeNameContains");
@@ -106,8 +124,26 @@ namespace UnityPrefabWizard.Editor
             // Add new field Button for 'name contains'
             var nameContainsButton = _root.Q<Button>("BT_IncludeNameContains");
             nameContainsButton.name += id.ToString();
-            nameContainsButton.clickable.clicked += () => AddNewEntryToFoldout(nameContainsFoldout);
+            nameContainsButton.clickable.clicked += () => AddNewSingleEntryToFoldout(nameContainsFoldout);
             
+            // 'Texture Input' foldout
+            var textureInputFoldout = _root.Q<Foldout>("FO_TextureInputs");
+            textureInputFoldout.name += id.ToString();
+            
+            // Default Values for 'Texture Input' foldout
+            foreach (var mapping in _defaultShaderPropertyToTextureSuffixMatching)
+            {
+                AddNewDoubleEntryToFoldout(
+                    textureInputFoldout,
+                    mapping.Key,
+                    mapping.Value);
+            }
+
+            // Add new field Button for 'texture inputs'
+            var textureInputsButton = _root.Q<Button>("BT_AddTextureInputMatching");
+            textureInputsButton.name += id.ToString();
+            textureInputsButton.clickable.clicked += () => AddNewDoubleEntryToFoldout(textureInputFoldout);
+
             // Remove Button
             var removeButton = _root.Q<Button>("BT_Remove");
             removeButton.name += id.ToString();
@@ -121,7 +157,7 @@ namespace UnityPrefabWizard.Editor
             labelRuleNumber.text += id.ToString();
         }
 
-        private void AddNewEntryToFoldout(Foldout foldout)
+        private void AddNewSingleEntryToFoldout(Foldout foldout)
         {
             var newIncludeNameStartsWithVisualElement = new VisualElement();
             newIncludeNameStartsWithVisualElement.style.flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row);
@@ -146,6 +182,42 @@ namespace UnityPrefabWizard.Editor
             newIncludeNameStartsWithVisualElement.Add(newIncludeNameStartsWithTextField);
             
             foldout.Add(newIncludeNameStartsWithVisualElement);
+        }
+        
+        private void AddNewDoubleEntryToFoldout(Foldout foldout, string textFirstInput="", string textSecondInput="")
+        {
+            var newTextureInputField = new VisualElement();
+            newTextureInputField.style.flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row);
+            
+            var removeButton = new Button()
+            {
+                text = "X"
+            };
+            removeButton.style.borderTopLeftRadius = 0;
+            removeButton.style.borderTopRightRadius = 0;
+            removeButton.style.borderBottomRightRadius = 0;
+            removeButton.style.borderBottomLeftRadius = 0;
+            removeButton.clickable.clicked += () => 
+                RemoveVisualElementFromFoldout(
+                    newTextureInputField,
+                    foldout);
+            
+            var shaderTextField = new TextField();
+            shaderTextField.style.flexGrow = 1;
+            shaderTextField.value = textFirstInput;
+
+            var label = new Label {text = "to"};
+
+            var textureSuffixTextField = new TextField();
+            textureSuffixTextField.style.flexGrow = 1;
+            textureSuffixTextField.value = textSecondInput;
+
+            newTextureInputField.Add(removeButton);
+            newTextureInputField.Add(shaderTextField);
+            newTextureInputField.Add(label);
+            newTextureInputField.Add(textureSuffixTextField);
+            
+            foldout.Add(newTextureInputField);
         }
         
         private void RemoveVisualElementFromFoldout(VisualElement visualElement, Foldout foldout)
@@ -179,6 +251,39 @@ namespace UnityPrefabWizard.Editor
             var newId = _availableIds[0];
             _availableIds.Remove(_availableIds[0]);
             return newId;
+        }
+
+        private void CreatePrefabForSelectedMesh()
+        {
+            // Obtain the selected model
+            var selectedAsset = Selection.activeObject;
+
+            if (selectedAsset == null)
+            {
+                EditorUtility.DisplayDialog(ErrorTitleError, ErrorBodySelectOneMesh, ErrorButtonOk);
+                return;
+            }
+            
+            var selectedAssetPath = AssetDatabase.GetAssetPath(selectedAsset);
+            if (String.IsNullOrWhiteSpace(selectedAssetPath))
+            {
+                EditorUtility.DisplayDialog(ErrorTitleError, ErrorBodySelectOneMesh, ErrorButtonOk);
+                return;
+            }
+            
+            // Check if the asset is a model
+            var model = (Mesh) AssetDatabase.LoadAssetAtPath(selectedAssetPath, typeof(Mesh));
+            if (model == null)
+            {
+                EditorUtility.DisplayDialog(ErrorTitleError, ErrorBodySelectOneMesh, ErrorButtonOk);
+                return;
+            }
+            
+            // Instantiate the model in the current scene and name it in preparation for creating the prefab out of it
+            var modelInScene = (GameObject) Instantiate(selectedAsset);
+            modelInScene.name = model.name;
+            
+            
         }
     }                                                                                                                                        
 }
