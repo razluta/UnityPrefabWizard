@@ -45,13 +45,13 @@
                     <ui:Toggle value="true" />
                     <ui:Label text="create a material for the mesh" style="flex-grow: 1;" />
                 </ui:VisualElement>
+                <ui:Label text="... give it this shader ..." style="-unity-text-align: upper-left;" />
+                <uie:ObjectField />
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="true" />
                     <ui:Label text="for naming, use &lt;MeshName&gt; + " style="flex-grow: 0; flex-shrink: 1;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" text="Mat" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
-                <ui:Label text="... give it this shader ..." style="-unity-text-align: upper-left;" />
-                <uie:ObjectField />
                 <ui:Foldout text="shader inputs and equivalent texture suffixes matchings" name="FO_TextureInputs" style="margin-left: 0;">
                     <ui:Button text="Add New Field" name="BT_AddTextureInputMatching" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
                 </ui:Foldout>
