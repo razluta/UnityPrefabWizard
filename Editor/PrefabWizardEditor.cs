@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -39,6 +40,8 @@ namespace UnityPrefabWizard.Editor
         private Button _clearRules;
         private Button _createPrefab;
 
+        private List<Rule> _activeRuleList;
+
         [MenuItem("Art Tools/Launch Prefab Wizard")]                                                                                     
         public static void ShowWindow()                                                                                                      
         {                                                                                                                                    
@@ -55,6 +58,7 @@ namespace UnityPrefabWizard.Editor
         private void OnEnable()
         {
             _ruleCount = -1;
+            _activeRuleList = new List<Rule>();
             _availableIds = new List<int>();
             
             // Reference to the root of the window.                                                                                          
@@ -279,10 +283,60 @@ namespace UnityPrefabWizard.Editor
                 return;
             }
             
-            // Instantiate the model in the current scene and name it in preparation for creating the prefab out of it
-            var modelInScene = (GameObject) Instantiate(selectedAsset);
-            modelInScene.name = model.name;
-            
+            // Parse every rule in the rule list
+            foreach (var rule in _activeRuleList)
+            {
+                // Instantiate the model in the current scene and name it in preparation for creating the prefab out of it
+                var modelInScene = (GameObject) Instantiate(selectedAsset);
+                modelInScene.name = model.name;
+                
+                // 'use mesh name'
+                if (rule.IsPrefabUseMeshName)
+                {
+                    modelInScene.name = selectedAsset.name;
+                }
+                // 'use mesh name, but replace *** with ***
+                else if (rule.IsPrefabUseMeshNameReplace)
+                {
+                    if (!String.IsNullOrWhiteSpace(rule.PrefabUseMeshNameReplaceSource) &&
+                        !String.IsNullOrWhiteSpace(rule.PrefabUseMeshNameReplaceTarget))
+                    {
+                        modelInScene.name = selectedAsset.name.Replace(
+                            rule.PrefabUseMeshNameReplaceSource,
+                            rule.PrefabUseMeshNameReplaceTarget);
+                    }
+                }
+                // 'use unique name'
+                else if (rule.IsPrefabUseUniqueName)
+                {
+                    if (!String.IsNullOrWhiteSpace(rule.PrefabUseUniqueNameTarget))
+                    {
+                        modelInScene.name = rule.PrefabUseUniqueNameTarget;
+                    }
+                }
+
+                // 'add suffix'
+                if (rule.IsPrefabAddSuffix)
+                {
+                    if (!String.IsNullOrWhiteSpace(rule.PrefabAddSuffixTarget))
+                    {
+                        modelInScene.name += rule.PrefabAddSuffixTarget;
+                    }
+                }
+                
+                // 'create a material for the mesh'
+                
+                // 'for naming, use <MeshName> + custom string'
+                
+                // 'give the material this shader'
+                
+                // 'shader inputs and equivalent texture suffixes matchings'
+                
+                // assign all textures that match the <MeshName>
+                
+                // assign new material to the mesh
+                
+            }
             
         }
     }                                                                                                                                        
