@@ -33,7 +33,7 @@ namespace UnityPrefabWizard
         
         public Shader MaterialShaderTarget { get; set; }
         
-        public List<Dictionary<string, string>> MaterialShaderInputToTextureSuffixMapping { get; set; }
+        public Dictionary<string, string> MaterialShaderInputToTextureSuffixMapping { get; set; }
         
         public bool IsMaterialAssignAllTexturesMatchMeshName { get; set; }
         public bool IsMaterialAssignMaterialToMesh { get; set; }
