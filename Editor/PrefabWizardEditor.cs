@@ -288,8 +288,7 @@ namespace UnityPrefabWizard.Editor
             {
                 // Instantiate the model in the current scene and name it in preparation for creating the prefab out of it
                 var modelInScene = (GameObject) Instantiate(selectedAsset);
-                modelInScene.name = model.name;
-                
+
                 // 'use mesh name'
                 if (rule.IsPrefabUseMeshName)
                 {
