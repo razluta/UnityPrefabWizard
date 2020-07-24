@@ -33,7 +33,7 @@
                     <ui:Label text="use unique name" style="flex-grow: 0; flex-shrink: 1;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
-                <ui:VisualElement style="flex-direction: row;">
+                <ui:VisualElement style="flex-direction: row; margin-top: 10px;">
                     <ui:Toggle value="false" />
                     <ui:Label text="add suffix" style="flex-grow: 0; flex-shrink: 1;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; white-space: normal;" />
