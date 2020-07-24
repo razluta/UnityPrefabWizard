@@ -324,16 +324,35 @@ namespace UnityPrefabWizard.Editor
                 }
                 
                 // 'create a material for the mesh'
-                
-                // 'for naming, use <MeshName> + custom string'
-                
                 // 'give the material this shader'
-                
-                // 'shader inputs and equivalent texture suffixes matchings'
-                
-                // assign all textures that match the <MeshName>
-                
-                // assign new material to the mesh
+                if (rule.MaterialShaderTarget)
+                {
+                    var material = new Material(rule.MaterialShaderTarget);
+                    material.name = selectedAsset.name;
+
+                    // 'for naming, use <MeshName> + custom string'
+                    if (rule.IsMaterialMeshNamePlusSuffix)
+                    {
+                        if (!String.IsNullOrWhiteSpace(rule.MaterialMeshNameSuffixTarget))
+                        {
+                            material.name = selectedAsset.name + rule.MaterialMeshNameSuffixTarget;
+                        }
+                    }
+                    
+                    // 'shader inputs and equivalent texture suffixes matchings'
+                    foreach (var mapping in rule.MaterialShaderInputToTextureSuffixMapping)
+                    {
+                        // assign all textures that match the <MeshName>
+                        var shaderProperty = mapping.Key;
+                        var textureNameSuffix = mapping.Value;
+                        
+                        // TODO continue logic here
+                    }
+
+                    
+
+                    // assign new material to the mesh
+                }
                 
             }
             
