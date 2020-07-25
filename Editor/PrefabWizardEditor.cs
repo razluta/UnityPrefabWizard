@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityPrefabWizard.AssetUtilities;
@@ -15,9 +17,12 @@ namespace UnityPrefabWizard.Editor
         private const int WindowWidth = 500;
         private const int WindowHeight = 800;
 
+        private const string PrefabExtension = ".prefab";
         private const string ErrorTitleError = "Error";
         private const string ErrorBodySelectOneMesh = "Please select one mesh in the project window!";
+        private const string ErrorTextureDoesNotExist = "The expected texture does not exist in the project: ";
         private const string ErrorButtonOk = "OK";
+        
         private readonly Dictionary<string, string> _defaultShaderPropertyToTextureSuffixMatching = 
             new Dictionary<string, string>()
         {
@@ -129,6 +134,11 @@ namespace UnityPrefabWizard.Editor
             var nameContainsButton = _root.Q<Button>("BT_IncludeNameContains");
             nameContainsButton.name += id.ToString();
             nameContainsButton.clickable.clicked += () => AddNewSingleEntryToFoldout(nameContainsFoldout);
+            
+            // Shader slot
+            var shaderObjectField = _root.Q<ObjectField>("OF_Shader");
+            shaderObjectField.name += id.ToString();
+            shaderObjectField.objectType = typeof(Shader);
             
             // 'Texture Input' foldout
             var textureInputFoldout = _root.Q<Foldout>("FO_TextureInputs");
@@ -283,6 +293,12 @@ namespace UnityPrefabWizard.Editor
                 return;
             }
             
+            var assetDirectoryPath = Path.GetDirectoryName(selectedAssetPath);
+            if (String.IsNullOrWhiteSpace(assetDirectoryPath))
+            {
+                return;
+            }
+            
             // Parse every rule in the rule list
             foreach (var rule in _activeRuleList)
             {
@@ -345,15 +361,45 @@ namespace UnityPrefabWizard.Editor
                         // assign all textures that match the <MeshName>
                         var shaderProperty = mapping.Key;
                         var textureNameSuffix = mapping.Value;
+
+                        var expectedTexturePath = Path.Combine(
+                            assetDirectoryPath,
+                            selectedAsset.name + textureNameSuffix + rule.MaterialTextureExtension);
                         
-                        // TODO continue logic here
+                        var texture = (Texture2D) AssetDatabase.LoadAssetAtPath(expectedTexturePath, typeof(Texture2D));
+                        
+                        // Exit early if the texture does not exist in the project
+                        if (!texture)
+                        {
+                            // Debug.Log(ErrorTextureDoesNotExist + expectedTexturePath);
+                            continue;
+                        }
+                        
+                        // Assign texture to the appropriate material slot
+                        material.SetTexture(shaderProperty, texture);
                     }
-
                     
+                    var renderer = modelInScene.GetComponent<Renderer>();
+                    
+                    // Save the material to the same folder
+                    AssetDatabase.CreateAsset(material, 
+                        Path.Combine(assetDirectoryPath, material.name + rule.MaterialMeshNameSuffixTarget));
 
-                    // assign new material to the mesh
+                    // Apply the material to the sub-mesh
+                    renderer.material = material;
+
+                    // Write all unsaved assets to disk
+                    AssetDatabase.SaveAssets();
                 }
                 
+                // Create a prefab
+                PrefabUtility.SaveAsPrefabAssetAndConnect(
+                    modelInScene,
+                    Path.Combine(assetDirectoryPath, modelInScene.name + PrefabExtension),
+                    InteractionMode.UserAction);
+                
+                // Cleanup - remove asset from scene
+                DestroyImmediate(modelInScene);
             }
             
         }
