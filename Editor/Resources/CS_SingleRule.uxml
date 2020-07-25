@@ -19,23 +19,23 @@
                 <ui:Label text="Create a Prefab ..." />
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="true" />
-                    <ui:Label text="use mesh name" style="flex-grow: 1;" />
+                    <ui:Label text="use mesh name" style="flex-grow: 1; -unity-text-align: middle-left;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="false" />
-                    <ui:Label text="use mesh name, but replace" style="flex-grow: 0; flex-shrink: 0; -unity-text-align: upper-left;" />
+                    <ui:Label text="use mesh name, but replace" style="flex-grow: 0; flex-shrink: 0; -unity-text-align: middle-left;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; -unity-text-align: upper-left; flex-shrink: 1; white-space: normal;" />
-                    <ui:Label text="with" style="flex-grow: 0; flex-shrink: 0;" />
+                    <ui:Label text="with" style="flex-grow: 0; flex-shrink: 0; -unity-text-align: middle-left;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; flex-shrink: 1; flex-wrap: nowrap; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="false" />
-                    <ui:Label text="use unique name" style="flex-grow: 0; flex-shrink: 1;" />
+                    <ui:Label text="use unique name" style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row; margin-top: 10px;">
                     <ui:Toggle value="false" />
-                    <ui:Label text="add suffix" style="flex-grow: 0; flex-shrink: 1;" />
+                    <ui:Label text="add suffix" style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
             </ui:VisualElement>
@@ -46,18 +46,22 @@
                     <ui:Label text="create a material for the mesh" style="flex-grow: 1;" />
                 </ui:VisualElement>
                 <ui:Label text="... give it this shader ..." style="-unity-text-align: upper-left;" />
-                <uie:ObjectField />
+                <uie:ObjectField name="OF_Shader" />
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="true" />
-                    <ui:Label text="for naming, use &lt;MeshName&gt; + " style="flex-grow: 0; flex-shrink: 1;" />
+                    <ui:Label text="for naming, use &lt;MeshName&gt; + " style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
                     <ui:TextField picking-mode="Ignore" value="filler text" text="Mat" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:Foldout text="shader inputs and equivalent texture suffixes matchings" name="FO_TextureInputs" style="margin-left: 0;">
                     <ui:Button text="Add New Field" name="BT_AddTextureInputMatching" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
                 </ui:Foldout>
+                <ui:VisualElement style="flex-direction: row; margin-left: 19px;">
+                    <ui:Label text="texture extension is" style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" text=".tga" style="flex-grow: 1; white-space: normal;" />
+                </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="true" />
-                    <ui:Label text="assign all textures that match the &lt;MeshName&gt;" style="flex-grow: 1; white-space: normal;" />
+                    <ui:Label text="assign all textures that match the &lt;MeshName&gt; + &lt;Suffix&gt;" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="true" />
