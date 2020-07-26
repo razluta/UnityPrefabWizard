@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using NUnit.Framework;
+using System.IO;using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityPrefabWizard.AssetUtilities;
+using UnityPrefabWizard.SystemUtilities;
 
 namespace UnityPrefabWizard.Editor
 {
@@ -41,9 +41,18 @@ namespace UnityPrefabWizard.Editor
 
         private int _ruleCount;
         private List<int> _availableIds;
+
+        private Button _loadRules;
+        private Button _saveRules;
         private Button _addRule;
         private Button _clearRules;
         private Button _createPrefab;
+
+        private ListView _logListView;
+        private VisualTreeAsset _listEntryVisualTreeAsset;
+        private Button _listEntryButton;
+
+        private Button _clearLog;
 
         private List<Rule> _activeRuleList;
 
@@ -79,8 +88,12 @@ namespace UnityPrefabWizard.Editor
             _singleRuleVisualTree = Resources.Load<VisualTreeAsset>("CS_SingleRule");
 
             // Load Rules Button
-            
+            _loadRules = _root.Q<Button>("BT_LoadRules");
+            _loadRules.clickable.clicked += LoadRules;
+
             // Save Rules Button
+            _saveRules = _root.Q<Button>("BT_SaveRules");
+            _saveRules.clickable.clicked += SaveRules;
             
             // Add Rule Button
             _addRule = _root.Q<Button>("BT_AddRule");
@@ -93,6 +106,44 @@ namespace UnityPrefabWizard.Editor
             // Create Prefab Button
             _createPrefab = _root.Q<Button>("BT_CreatePrefab");
             _createPrefab.clickable.clicked += CreatePrefabForSelectedMesh;
+            
+            // Log List View
+            _logListView = _root.Q<ListView>("LV_Log");
+            _listEntryVisualTreeAsset = Resources.Load<VisualTreeAsset>("CS_LogEntry");
+            _logListView.Clear();
+            
+            // ClearLog
+            _clearLog = _root.Q<Button>("BT_ClearLog");
+            _clearLog.clickable.clicked += ClearLog;
+        }
+
+        private void LoadRules()
+        {
+            var rulesPath = EditorUtility.OpenFilePanel("", "", "json");
+            if (String.IsNullOrWhiteSpace(rulesPath))
+            {
+                
+                return;
+            }
+            
+            _activeRuleList = PrefabWizard.GetRules(rulesPath);
+        }
+
+        private void SaveRules()
+        {
+            var rulesPath = EditorUtility.SaveFilePanel(
+                "", "", "rules", "json");
+            
+            PrefabWizard.SetRules(_activeRuleList, rulesPath);
+            AssetDatabase.Refresh();
+            
+            // Update the list
+            _logListView.Clear(); 
+            _listEntryVisualTreeAsset.CloneTree(_logListView);
+            _listEntryButton = _root.Q<Button>("BT_LogEntry");
+            _listEntryButton.name += "SaveLog";
+            _listEntryButton.text = "Successfully saved rules to path: " + rulesPath;
+            _logListView.Add(_listEntryButton);
         }
 
         private void AddNewRule()
@@ -402,6 +453,11 @@ namespace UnityPrefabWizard.Editor
                 DestroyImmediate(modelInScene);
             }
             
+        }
+
+        private void ClearLog()
+        {
+            _logListView.Clear();
         }
     }                                                                                                                                        
 }
