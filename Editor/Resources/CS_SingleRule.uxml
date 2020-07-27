@@ -49,7 +49,7 @@
                 <ui:VisualElement style="flex-direction: row;">
                     <ui:Toggle value="true" name="TG_MaterialUseMeshName" />
                     <ui:Label text="for naming, use &lt;MeshName&gt; + " style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
-                    <ui:TextField picking-mode="Ignore" value="filler text" text="Mat" name="TF_MaterialUseMeshNameTarget" style="flex-grow: 1; white-space: normal;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" text="_Mat" name="TF_MaterialUseMeshNameTarget" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:Foldout text="shader inputs and equivalent texture suffixes matchings" name="FO_TextureInputs" style="margin-left: 0;">
                     <ui:Button text="Add New Field" name="BT_AddTextureInputMatching" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
