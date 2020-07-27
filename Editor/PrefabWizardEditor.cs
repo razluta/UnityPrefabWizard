@@ -529,25 +529,43 @@ namespace UnityPrefabWizard.Editor
 
                 // 'Name contains' foldout
                 currentRule.MeshNameContains = new List<string>();
-                var nameContainsFoldout = currentVisualRule.Q<Foldout>(LabelFoldoutIncludeNameContains);
-                var nameContainsFoldoutChildCount = nameContainsFoldout.childCount;
+                var nameContains = currentVisualRule.Q<Foldout>(LabelFoldoutIncludeNameContains);
+                var nameContainsFoldoutChildCount = nameContains.childCount;
                 for (var j = 1; j < nameContainsFoldoutChildCount; j++)
                 {
-                    var textField = (TextField) nameContainsFoldout.hierarchy.ElementAt(1).ElementAt(j).ElementAt(1);
+                    var textField = (TextField) nameContains.hierarchy.ElementAt(1).ElementAt(j).ElementAt(1);
                     currentRule.MeshNameContains.Add(textField.text);
                 }
                 
                 // 'Use Mesh Name'
-                currentRule.IsPrefabUseMeshName = true;
-                var isPrefabUseMeshNameToggle = currentVisualRule.Q<Toggle>();
+                var isPrefabUseMeshName = currentVisualRule.Q<Toggle>(LabelToggleUseMeshName).value;
+                currentRule.IsPrefabUseMeshName = isPrefabUseMeshName;
+                
+                // 'Use Mesh Name, but Replace ... with ...'
+                var isPrefabUseMeshNameReplace = currentVisualRule.Q<Toggle>(LabelToggleUseMeshNameReplace).value;
+                currentRule.IsPrefabUseMeshNameReplace = isPrefabUseMeshNameReplace;
+                var prefabUseMeshNameReplaceSource = currentVisualRule.Q<TextField>(LabelTextFieldUseMeshNameReplaceSource).text;
+                currentRule.PrefabUseMeshNameReplaceSource = prefabUseMeshNameReplaceSource;
+                var prefabUseMeshNameReplaceTarget = currentVisualRule.Q<TextField>(LabelTextFieldUseMeshNameReplaceTarget).text;
+                currentRule.PrefabUseMeshNameReplaceTarget = prefabUseMeshNameReplaceTarget;
+                
+                // 'Use Unique Name'
+                var isPrefabUseUniqueName = currentVisualRule.Q<Toggle>(LabelToggleUseUniqueName).value;
+                currentRule.IsPrefabUseUniqueName = isPrefabUseUniqueName;
+                var prefabUseUniqueNameTarget = currentVisualRule.Q<TextField>(LabelTextFieldUseUniqueNameTarget).text;
+                currentRule.PrefabUseUniqueNameTarget = prefabUseUniqueNameTarget;
+                
+                // 'Add Suffix'
                 
                 
                 
-                currentRule.IsPrefabUseMeshNameReplace = false;
-                currentRule.PrefabUseMeshNameReplaceSource = "";
-                currentRule.PrefabUseMeshNameReplaceTarget = "";
-                currentRule.IsPrefabUseUniqueName = false;
-                currentRule.PrefabUseUniqueNameTarget = "";
+                
+                
+                
+                
+                
+                
+                
                 currentRule.IsPrefabAddSuffix = false;
                 currentRule.PrefabAddSuffixTarget = "";
                 currentRule.IsMaterialCreateMaterialForMesh = true;
