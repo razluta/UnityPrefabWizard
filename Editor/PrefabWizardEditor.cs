@@ -41,11 +41,25 @@ namespace UnityPrefabWizard.Editor
         private const string LabelFoldoutIncludeNameStartsWith = "FO_IncludeNameStartsWith";
         private const string LabelButtonNameContains = "BT_IncludeNameContains";
         private const string LabelFoldoutIncludeNameContains = "FO_IncludeNameContains";
+        private const string LabelToggleUseMeshName = "TG_UseMeshName";
+        private const string LabelToggleUseMeshNameReplace = "TG_UseMeshNameReplace";
+        private const string LabelTextFieldUseMeshNameReplaceSource = "TF_UseMeshNameReplaceSource";
+        private const string LabelTextFieldUseMeshNameReplaceTarget = "TF_UseMeshNameReplaceTarget";
+        private const string LabelToggleUseUniqueName = "TG_UseUniqueName";
+        private const string LabelTextFieldUseUniqueNameTarget = "TF_UseUniqueNameTarget";
+        private const string LabelToggleAddSuffix = "TG_AddSuffix";
+        private const string LabelTextFieldAddSuffixTarget = "TF_AddSuffixTarget";
+        private const string LabelToggleCreateMaterialForMesh = "TG_CreateMaterialForMesh";
         private const string LabelObjectFieldShader = "OF_Shader";
+        private const string LabelToggleMaterialUseMeshName = "TG_MaterialUseMeshName";
+        private const string LabelTextFieldMaterialUseMeshNameTarget = "TF_MaterialUseMeshNameTarget";
         private const string LabelFoldoutTextureInputs = "FO_TextureInputs";
+        private const string LabelTextFieldTextureExtensionTarget = "TF_TextureExtensionTarget";
+        private const string LabelToggleAssignAllTexturesToMaterial = "TG_AssignAllTexturesToMaterial";
+        private const string LabelToggleAssignMaterialToMesh = "TG_AssignMaterialToMesh";
+
         private const string LabelButtonAddTextureInputMatching = "BT_AddTextureInputMatching";
         private const string LabelButtonRemove = "BT_Remove";
-        
         
         private const string TitleError = "Error";
         private const string MessageErrorBodySelectOneMesh = "Please select one mesh in the project window!";
@@ -526,8 +540,7 @@ namespace UnityPrefabWizard.Editor
                 
                 // 'Use Mesh Name'
                 currentRule.IsPrefabUseMeshName = true;
-                 
-                
+                var isPrefabUseMeshNameToggle = currentVisualRule.Q<Toggle>();
                 
                 
                 
