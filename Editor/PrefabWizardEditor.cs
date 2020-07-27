@@ -138,11 +138,13 @@ namespace UnityPrefabWizard.Editor
             {
                 return;
             }
+
+            UpdateActiveRuleListWithRulesListViewContents();
             
             PrefabWizard.SetRules(_activeRuleList, rulesPath);
             AssetDatabase.Refresh();
             
-            // Update the list
+            // Update the log list
             _logListView.Clear(); 
             _listEntryVisualTreeAsset.CloneTree(_logListView);
             _listEntryButton = _root.Q<Button>("BT_LogEntry");
@@ -220,11 +222,6 @@ namespace UnityPrefabWizard.Editor
             removeButton.clickable.clicked += () => RemoveRule(newRuleVisualElement, id);
             removeButton.style.backgroundColor = randomColor;
             removeButton.style.color = inverseRandomColor;
-            
-            // Rule count Label
-            var labelRuleNumber = _root.Q<Label>("LB_Rule");
-            labelRuleNumber.name += id.ToString();
-            labelRuleNumber.text += id.ToString();
         }
 
         private void AddNewSingleEntryToFoldout(Foldout foldout)
@@ -463,6 +460,63 @@ namespace UnityPrefabWizard.Editor
         private void ClearLog()
         {
             _logListView.Clear();
+        }
+
+        private void UpdateActiveRuleListWithRulesListViewContents()
+        {
+            // source: _rulesListView 
+            // target: _activeRuleList
+            if (_rulesListView == null)
+            {
+                return;
+            }
+            
+            _activeRuleList.Clear();
+
+            var ruleCount = _rulesListView.childCount;
+            for (var i = 0; i < ruleCount; i++)
+            {
+                var currentRule = new Rule();
+
+                var visualRuleId = i;
+
+                // Rule Id
+                currentRule.RuleId = visualRuleId;
+                
+                // 'Name starts with' foldout
+                currentRule.MeshNameStartsWith = new List<string>();
+                var nameStartsWithFoldout = _root.Q<Foldout>("FO_IncludeNameStartsWith" + i);
+                var nameStartsWithFoldoutChildCount = nameStartsWithFoldout.childCount;
+                for (var j = 1; j < nameStartsWithFoldoutChildCount; j++)
+                {
+                    var textField = (TextField) nameStartsWithFoldout.hierarchy.ElementAt(1).ElementAt(j).ElementAt(1);
+                    currentRule.MeshNameStartsWith.Add(textField.text);
+                }
+
+                currentRule.MeshNameContains = new List<string>() {""};
+                currentRule.IsPrefabUseMeshName = true;
+                currentRule.IsPrefabUseMeshNameReplace = false;
+                currentRule.PrefabUseMeshNameReplaceSource = "";
+                currentRule.PrefabUseMeshNameReplaceTarget = "";
+                currentRule.IsPrefabUseUniqueName = false;
+                currentRule.PrefabUseUniqueNameTarget = "";
+                currentRule.IsPrefabAddSuffix = false;
+                currentRule.PrefabAddSuffixTarget = "";
+                currentRule.IsMaterialCreateMaterialForMesh = true;
+                currentRule.MaterialShaderTarget = null;
+                currentRule.IsMaterialMeshNamePlusSuffix = false;
+                currentRule.MaterialMeshNameSuffixTarget = "";
+                currentRule.MaterialShaderInputToTextureSuffixMapping = new Dictionary<string, string>()
+                {
+                    {" ", " "}
+                };
+                currentRule.MaterialTextureExtension = "";
+                currentRule.IsMaterialAssignAllTexturesMatchMeshName = false;
+                currentRule.IsMaterialAssignMaterialToMesh = false;
+                
+                _activeRuleList.Add(currentRule);
+            }
+            
         }
     }                                                                                                                                        
 }
