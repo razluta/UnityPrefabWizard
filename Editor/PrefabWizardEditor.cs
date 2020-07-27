@@ -20,7 +20,7 @@ namespace UnityPrefabWizard.Editor
         
         private const string PrefabExtension = ".prefab";
         private const string JsonExtension = "json";
-        private const string DefaultRulesFileName = "rules";
+        private const string DefaultRulesFileName = "Rules";
 
         private const string LabelUxmlMainPrefabWizard = "CS_PrefabWizard";
         private const string LabelListViewRulesList = "LV_RulesList";
@@ -36,6 +36,7 @@ namespace UnityPrefabWizard.Editor
         private const string LabelButtonLogEntry = "BT_LogEntry";
         private const string LabelButtonClearLog = "BT_ClearLog";
 
+        
         private const string LabelButtonNameStartsWith = "BT_IncludeNameStartsWith";
         private const string LabelFoldoutIncludeNameStartsWith = "FO_IncludeNameStartsWith";
         private const string LabelButtonNameContains = "BT_IncludeNameContains";
@@ -50,8 +51,8 @@ namespace UnityPrefabWizard.Editor
         private const string LabelTextFieldAddSuffixTarget = "TF_AddSuffixTarget";
         private const string LabelToggleCreateMaterialForMesh = "TG_CreateMaterialForMesh";
         private const string LabelObjectFieldShader = "OF_Shader";
-        private const string LabelToggleMaterialUseMeshName = "TG_MaterialUseMeshName";
-        private const string LabelTextFieldMaterialUseMeshNameTarget = "TF_MaterialUseMeshNameTarget";
+        private const string LabelToggleMaterialUseMeshNamePlusSuffix = "TG_MaterialUseMeshName";
+        private const string LabelTextFieldMaterialUseMeshNamePlusSuffixTarget = "TF_MaterialUseMeshNameTarget";
         private const string LabelFoldoutTextureInputs = "FO_TextureInputs";
         private const string LabelTextFieldTextureExtensionTarget = "TF_TextureExtensionTarget";
         private const string LabelToggleAssignAllTexturesToMaterial = "TG_AssignAllTexturesToMaterial";
@@ -65,13 +66,14 @@ namespace UnityPrefabWizard.Editor
         private const string MessageErrorTextureDoesNotExist = "The expected texture does not exist in the project: ";
         private const string LabelButtonErrorOk = "OK";
         private const string MessageSuccessfullySavedRules = "Successfully saved rules to path: ";
+        private const string MessageSuccessfullyLoadedRules = "Successfully loaded rules from path: ";
 
         private readonly Dictionary<string, string> _defaultShaderPropertyToTextureSuffixMatching = 
             new Dictionary<string, string>()
         {
-            {"_MainTex", "_diff"}, // Albedo or diffuse texture
-            {"_SpecGlossMap", "_spec"}, // Specular texture
-            {"_BumpMap", "_norm"}, // Normal map texture
+            {"_MainTex", "_Diff"}, // Albedo or diffuse texture
+            {"_SpecGlossMap", "_Spec"}, // Specular texture
+            {"_BumpMap", "_Norm"}, // Normal map texture
             // ...
         };
 
@@ -170,6 +172,14 @@ namespace UnityPrefabWizard.Editor
             }
             
             _activeRuleList = PrefabWizard.GetRules(rulesPath);
+            UpdateRulesListViewContentsWithActiveRuleList();
+            
+            // Update the log list
+            _logListView.Clear(); 
+            _listEntryVisualTreeAsset.CloneTree(_logListView);
+            _listEntryButton = _root.Q<Button>(LabelButtonLogEntry);
+            _listEntryButton.text = MessageSuccessfullyLoadedRules + rulesPath;
+            _logListView.Add(_listEntryButton);
         }
 
         private void SaveRules()
@@ -210,6 +220,7 @@ namespace UnityPrefabWizard.Editor
                 (randomColor.r + randomColor.g + randomColor.b) / 3 > 0.5f ? Color.black : Color.white;
             
             var newRuleVisualElement = _root.Q<VisualElement>(LabelVisualElementSingleRule);
+            newRuleVisualElement.name += id.ToString();
             
             newRuleVisualElement.style.borderTopColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderRightColor = new StyleColor(randomColor);
@@ -236,7 +247,7 @@ namespace UnityPrefabWizard.Editor
             
             // 'Texture Input' foldout
             var textureInputFoldout = newRuleVisualElement.Q<Foldout>(LabelFoldoutTextureInputs);
-
+            
             // Default Values for 'Texture Input' foldout
             foreach (var mapping in _defaultShaderPropertyToTextureSuffixMatching)
             {
@@ -569,22 +580,46 @@ namespace UnityPrefabWizard.Editor
                 var materialShaderTarget = (Shader) currentVisualRule.Q<ObjectField>(LabelObjectFieldShader).value;
                 currentRule.MaterialShaderTarget = materialShaderTarget;
                 
+                // 'For naming, use <MeshName> + ... (Mat)
+                var isMaterialMeshNamePlusSuffix = currentVisualRule.Q<Toggle>(LabelToggleMaterialUseMeshNamePlusSuffix).value;
+                currentRule.IsMaterialMeshNamePlusSuffix = isMaterialMeshNamePlusSuffix;
+                var materialMeshNameSuffixTarget = currentVisualRule.Q<TextField>(LabelTextFieldMaterialUseMeshNamePlusSuffixTarget).text;
+                currentRule.MaterialMeshNameSuffixTarget = materialMeshNameSuffixTarget;
                 
-                
-                
-                
-                currentRule.IsMaterialMeshNamePlusSuffix = false;
-                currentRule.MaterialMeshNameSuffixTarget = "";
-                currentRule.MaterialShaderInputToTextureSuffixMapping = new Dictionary<string, string>()
+                // 'Shader Inputs and Equivalent Texture Suffixes Matchings'
+                currentRule.MaterialShaderInputToTextureSuffixMapping = new Dictionary<string, string>();
+                var materialShaderInputToTextureSuffixMapping = currentVisualRule.Q<Foldout>(
+                    LabelFoldoutTextureInputs);
+                var materialShaderInputToTextureSuffixMappingChildCount =
+                    materialShaderInputToTextureSuffixMapping.childCount;
+                for (var j = 1; j < materialShaderInputToTextureSuffixMappingChildCount; j++)
                 {
-                    {" ", " "}
-                };
-                currentRule.MaterialTextureExtension = "";
-                currentRule.IsMaterialAssignAllTexturesMatchMeshName = false;
-                currentRule.IsMaterialAssignMaterialToMesh = false;
+                    var textFieldSource = (TextField) 
+                        materialShaderInputToTextureSuffixMapping.hierarchy.ElementAt(1).ElementAt(j).ElementAt(1);
+                    var textFieldTarget = (TextField) 
+                        materialShaderInputToTextureSuffixMapping.hierarchy.ElementAt(1).ElementAt(j).ElementAt(3);
+                    currentRule.MaterialShaderInputToTextureSuffixMapping.Add(textFieldSource.text, textFieldTarget.text);
+                }
                 
+                // 'Texture extension is ..."
+                var materialTextureExtension = currentVisualRule.Q<TextField>(LabelTextFieldTextureExtensionTarget).text;
+                currentRule.MaterialTextureExtension = materialTextureExtension;
+
+                // 'Assign all textures that match the <MeshName> + <Suffix>
+                var isMaterialAssignAllTexturesMatchMeshName = currentVisualRule.Q<Toggle>(LabelToggleAssignAllTexturesToMaterial).value;
+                currentRule.IsMaterialAssignAllTexturesMatchMeshName = isMaterialAssignAllTexturesMatchMeshName;
+                
+                // Assign the new material to the mesh
+                var isMaterialAssignMaterialToMesh = currentVisualRule.Q<Toggle>(LabelToggleAssignMaterialToMesh).value;
+                currentRule.IsMaterialAssignMaterialToMesh = isMaterialAssignMaterialToMesh;
+                
+                // Add the new rule to the active rule list
                 _activeRuleList.Add(currentRule);
             }
+        }
+
+        private void UpdateRulesListViewContentsWithActiveRuleList()
+        {
             
         }
     }                                                                                                                                        
