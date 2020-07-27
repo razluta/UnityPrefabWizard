@@ -11,7 +11,7 @@ namespace UnityPrefabWizard.Editor
 {
     public class PrefabWizardEditor : EditorWindow
     {
-        // private string _version = "v.0.0.1.20200710";
+        private const string VersionNumber = "v.0.1.0.20200727";
 
         private const int WindowWidth = 500;
         private const int WindowHeight = 800;
@@ -35,8 +35,8 @@ namespace UnityPrefabWizard.Editor
         private const string LabelUxmlLogEntry = "CS_LogEntry";
         private const string LabelButtonLogEntry = "BT_LogEntry";
         private const string LabelButtonClearLog = "BT_ClearLog";
+        private const string LabelLabelVersion = "LB_Version";
 
-        
         private const string LabelButtonNameStartsWith = "BT_IncludeNameStartsWith";
         private const string LabelFoldoutIncludeNameStartsWith = "FO_IncludeNameStartsWith";
         private const string LabelButtonNameContains = "BT_IncludeNameContains";
@@ -98,6 +98,7 @@ namespace UnityPrefabWizard.Editor
         private Button _listEntryButton;
 
         private Button _clearLog;
+        private Label _labelVersion;
 
         private List<Rule> _activeRuleList;
 
@@ -160,6 +161,11 @@ namespace UnityPrefabWizard.Editor
             // ClearLog
             _clearLog = _root.Q<Button>(LabelButtonClearLog);
             _clearLog.clickable.clicked += ClearLog;
+            
+            // Version Label
+            _labelVersion = _root.Q<Label>(LabelLabelVersion);
+            _labelVersion.text = VersionNumber;
+
         }
 
         private void LoadRules()
