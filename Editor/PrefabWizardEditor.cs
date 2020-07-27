@@ -133,6 +133,11 @@ namespace UnityPrefabWizard.Editor
         {
             var rulesPath = EditorUtility.SaveFilePanel(
                 "", "", "rules", "json");
+
+            if (String.IsNullOrWhiteSpace(rulesPath))
+            {
+                return;
+            }
             
             PrefabWizard.SetRules(_activeRuleList, rulesPath);
             AssetDatabase.Refresh();
