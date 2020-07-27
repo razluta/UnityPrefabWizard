@@ -16,13 +16,43 @@ namespace UnityPrefabWizard.Editor
 
         private const int WindowWidth = 500;
         private const int WindowHeight = 800;
-
-        private const string PrefabExtension = ".prefab";
-        private const string ErrorTitleError = "Error";
-        private const string ErrorBodySelectOneMesh = "Please select one mesh in the project window!";
-        private const string ErrorTextureDoesNotExist = "The expected texture does not exist in the project: ";
-        private const string ErrorButtonOk = "OK";
+        private const string WindowName = "Prefab Wizard";
+        private const string WindowMenuPath = "Art Tools/" + WindowName;
         
+        private const string PrefabExtension = ".prefab";
+        private const string JsonExtension = "json";
+        private const string DefaultRulesFileName = "rules";
+
+        private const string LabelUxmlMainPrefabWizard = "CS_PrefabWizard";
+        private const string LabelListViewRulesList = "LV_RulesList";
+        private const string LabelUxmlSingleRule = "CS_SingleRule";
+        private const string LabelVisualElementSingleRule = "VE_SingleRule";
+        private const string LabelButtonLoadRules = "BT_LoadRules";
+        private const string LabelButtonSaveRules = "BT_SaveRules";
+        private const string LabelButtonAddRule = "BT_AddRule";
+        private const string LabelButtonClearRules = "BT_ClearRules";
+        private const string LabelButtonCreatePrefab = "BT_CreatePrefab";
+        private const string LabelListViewLog = "LV_Log";
+        private const string LabelUxmlLogEntry = "CS_LogEntry";
+        private const string LabelButtonLogEntry = "BT_LogEntry";
+        private const string LabelButtonClearLog = "BT_ClearLog";
+
+        private const string LabelButtonNameStartsWith = "BT_IncludeNameStartsWith";
+        private const string LabelFoldoutIncludeNameStartsWith = "FO_IncludeNameStartsWith";
+        private const string LabelButtonNameContains = "BT_IncludeNameContains";
+        private const string LabelFoldoutIncludeNameContains = "FO_IncludeNameContains";
+        private const string LabelObjectFieldShader = "OF_Shader";
+        private const string LabelFoldoutTextureInputs = "FO_TextureInputs";
+        private const string LabelButtonAddTextureInputMatching = "BT_AddTextureInputMatching";
+        private const string LabelButtonRemove = "BT_Remove";
+        
+        
+        private const string TitleError = "Error";
+        private const string MessageErrorBodySelectOneMesh = "Please select one mesh in the project window!";
+        private const string MessageErrorTextureDoesNotExist = "The expected texture does not exist in the project: ";
+        private const string LabelButtonErrorOk = "OK";
+        private const string MessageSuccessfullySavedRules = "Successfully saved rules to path: ";
+
         private readonly Dictionary<string, string> _defaultShaderPropertyToTextureSuffixMatching = 
             new Dictionary<string, string>()
         {
@@ -56,14 +86,14 @@ namespace UnityPrefabWizard.Editor
 
         private List<Rule> _activeRuleList;
 
-        [MenuItem("Art Tools/Launch Prefab Wizard")]                                                                                     
+        [MenuItem(WindowMenuPath)]                                                                                     
         public static void ShowWindow()                                                                                                      
         {                                                                                                                                    
             // Opens the window, otherwise focuses it if it’s already open.                                                                  
             var window = GetWindow<PrefabWizardEditor>();
 
             // Adds a title to the window.                                                                                                   
-            window.titleContent = new GUIContent("Prefab Wizard");                                                                
+            window.titleContent = new GUIContent(WindowName);                                                                
                                                                                                                                              
             // Sets a minimum size to the window.                                                                                            
             window.minSize = new Vector2(WindowWidth, WindowHeight);
@@ -79,47 +109,47 @@ namespace UnityPrefabWizard.Editor
             _root = rootVisualElement;
             
             // Instantiate contents
-            _contents = Resources.Load<VisualTreeAsset>("CS_PrefabWizard");
+            _contents = Resources.Load<VisualTreeAsset>(LabelUxmlMainPrefabWizard);
             _contents.CloneTree(_root);
 
-            _rulesListView = _root.Q<ListView>("LV_RulesList");
+            _rulesListView = _root.Q<ListView>(LabelListViewRulesList);
             
             // Single Rule Reference
-            _singleRuleVisualTree = Resources.Load<VisualTreeAsset>("CS_SingleRule");
+            _singleRuleVisualTree = Resources.Load<VisualTreeAsset>(LabelUxmlSingleRule);
 
             // Load Rules Button
-            _loadRules = _root.Q<Button>("BT_LoadRules");
+            _loadRules = _root.Q<Button>(LabelButtonLoadRules);
             _loadRules.clickable.clicked += LoadRules;
 
             // Save Rules Button
-            _saveRules = _root.Q<Button>("BT_SaveRules");
+            _saveRules = _root.Q<Button>(LabelButtonSaveRules);
             _saveRules.clickable.clicked += SaveRules;
             
             // Add Rule Button
-            _addRule = _root.Q<Button>("BT_AddRule");
+            _addRule = _root.Q<Button>(LabelButtonAddRule);
             _addRule.clickable.clicked += AddNewRule;
             
             // Clear Rules Button
-            _clearRules = _root.Q<Button>("BT_ClearRules");
+            _clearRules = _root.Q<Button>(LabelButtonClearRules);
             _clearRules.clickable.clicked += ClearRules;
             
             // Create Prefab Button
-            _createPrefab = _root.Q<Button>("BT_CreatePrefab");
+            _createPrefab = _root.Q<Button>(LabelButtonCreatePrefab);
             _createPrefab.clickable.clicked += CreatePrefabForSelectedMesh;
             
             // Log List View
-            _logListView = _root.Q<ListView>("LV_Log");
-            _listEntryVisualTreeAsset = Resources.Load<VisualTreeAsset>("CS_LogEntry");
+            _logListView = _root.Q<ListView>(LabelListViewLog);
+            _listEntryVisualTreeAsset = Resources.Load<VisualTreeAsset>(LabelUxmlLogEntry);
             _logListView.Clear();
             
             // ClearLog
-            _clearLog = _root.Q<Button>("BT_ClearLog");
+            _clearLog = _root.Q<Button>(LabelButtonClearLog);
             _clearLog.clickable.clicked += ClearLog;
         }
 
         private void LoadRules()
         {
-            var rulesPath = EditorUtility.OpenFilePanel("", "", "json");
+            var rulesPath = EditorUtility.OpenFilePanel("", "", JsonExtension);
             if (String.IsNullOrWhiteSpace(rulesPath))
             {
                 
@@ -132,7 +162,7 @@ namespace UnityPrefabWizard.Editor
         private void SaveRules()
         {
             var rulesPath = EditorUtility.SaveFilePanel(
-                "", "", "rules", "json");
+                "", "", DefaultRulesFileName, JsonExtension);
 
             if (String.IsNullOrWhiteSpace(rulesPath))
             {
@@ -147,9 +177,8 @@ namespace UnityPrefabWizard.Editor
             // Update the log list
             _logListView.Clear(); 
             _listEntryVisualTreeAsset.CloneTree(_logListView);
-            _listEntryButton = _root.Q<Button>("BT_LogEntry");
-            _listEntryButton.name += "SaveLog";
-            _listEntryButton.text = "Successfully saved rules to path: " + rulesPath;
+            _listEntryButton = _root.Q<Button>(LabelButtonLogEntry);
+            _listEntryButton.text = MessageSuccessfullySavedRules + rulesPath;
             _logListView.Add(_listEntryButton);
         }
 
@@ -167,41 +196,34 @@ namespace UnityPrefabWizard.Editor
             var inverseRandomColor = 
                 (randomColor.r + randomColor.g + randomColor.b) / 3 > 0.5f ? Color.black : Color.white;
             
-            var newRuleVisualElement = _root.Q<VisualElement>("VE_SingleRule");
-
-            newRuleVisualElement.name += id.ToString();
+            var newRuleVisualElement = _root.Q<VisualElement>(LabelVisualElementSingleRule);
+            
             newRuleVisualElement.style.borderTopColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderRightColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderBottomColor = new StyleColor(randomColor);
             newRuleVisualElement.style.borderLeftColor = new StyleColor(randomColor);
             
             // 'Name starts with' foldout
-            var nameStartsWithFoldout = _root.Q<Foldout>("FO_IncludeNameStartsWith");
-            nameStartsWithFoldout.name += id.ToString();
-            
+            var nameStartsWithFoldout = newRuleVisualElement.Q<Foldout>(LabelFoldoutIncludeNameStartsWith);
+
             // Add new field Button for 'name starts with'
-            var nameStartsWithButton = _root.Q<Button>("BT_IncludeNameStartsWith");
-            nameStartsWithButton.name += id.ToString();
+            var nameStartsWithButton = newRuleVisualElement.Q<Button>(LabelButtonNameStartsWith);
             nameStartsWithButton.clickable.clicked += () => AddNewSingleEntryToFoldout(nameStartsWithFoldout);
             
             // 'Name contains' foldout
-            var nameContainsFoldout = _root.Q<Foldout>("FO_IncludeNameContains");
-            nameContainsFoldout.name += id.ToString();
+            var nameContainsFoldout = newRuleVisualElement.Q<Foldout>(LabelFoldoutIncludeNameContains);
 
             // Add new field Button for 'name contains'
-            var nameContainsButton = _root.Q<Button>("BT_IncludeNameContains");
-            nameContainsButton.name += id.ToString();
+            var nameContainsButton = newRuleVisualElement.Q<Button>(LabelButtonNameContains);
             nameContainsButton.clickable.clicked += () => AddNewSingleEntryToFoldout(nameContainsFoldout);
             
             // Shader slot
-            var shaderObjectField = _root.Q<ObjectField>("OF_Shader");
-            shaderObjectField.name += id.ToString();
+            var shaderObjectField = newRuleVisualElement.Q<ObjectField>(LabelObjectFieldShader);
             shaderObjectField.objectType = typeof(Shader);
             
             // 'Texture Input' foldout
-            var textureInputFoldout = _root.Q<Foldout>("FO_TextureInputs");
-            textureInputFoldout.name += id.ToString();
-            
+            var textureInputFoldout = newRuleVisualElement.Q<Foldout>(LabelFoldoutTextureInputs);
+
             // Default Values for 'Texture Input' foldout
             foreach (var mapping in _defaultShaderPropertyToTextureSuffixMatching)
             {
@@ -212,13 +234,11 @@ namespace UnityPrefabWizard.Editor
             }
 
             // Add new field Button for 'texture inputs'
-            var textureInputsButton = _root.Q<Button>("BT_AddTextureInputMatching");
-            textureInputsButton.name += id.ToString();
+            var textureInputsButton = newRuleVisualElement.Q<Button>(LabelButtonAddTextureInputMatching);
             textureInputsButton.clickable.clicked += () => AddNewDoubleEntryToFoldout(textureInputFoldout);
 
             // Remove Button
-            var removeButton = _root.Q<Button>("BT_Remove");
-            removeButton.name += id.ToString();
+            var removeButton = newRuleVisualElement.Q<Button>(LabelButtonRemove);
             removeButton.clickable.clicked += () => RemoveRule(newRuleVisualElement, id);
             removeButton.style.backgroundColor = randomColor;
             removeButton.style.color = inverseRandomColor;
@@ -327,14 +347,14 @@ namespace UnityPrefabWizard.Editor
 
             if (selectedAsset == null)
             {
-                EditorUtility.DisplayDialog(ErrorTitleError, ErrorBodySelectOneMesh, ErrorButtonOk);
+                EditorUtility.DisplayDialog(TitleError, MessageErrorBodySelectOneMesh, LabelButtonErrorOk);
                 return;
             }
             
             var selectedAssetPath = AssetDatabase.GetAssetPath(selectedAsset);
             if (String.IsNullOrWhiteSpace(selectedAssetPath))
             {
-                EditorUtility.DisplayDialog(ErrorTitleError, ErrorBodySelectOneMesh, ErrorButtonOk);
+                EditorUtility.DisplayDialog(TitleError, MessageErrorBodySelectOneMesh, LabelButtonErrorOk);
                 return;
             }
             
@@ -342,7 +362,7 @@ namespace UnityPrefabWizard.Editor
             var model = (Mesh) AssetDatabase.LoadAssetAtPath(selectedAssetPath, typeof(Mesh));
             if (model == null)
             {
-                EditorUtility.DisplayDialog(ErrorTitleError, ErrorBodySelectOneMesh, ErrorButtonOk);
+                EditorUtility.DisplayDialog(TitleError, MessageErrorBodySelectOneMesh, LabelButtonErrorOk);
                 return;
             }
             
@@ -477,6 +497,7 @@ namespace UnityPrefabWizard.Editor
             for (var i = 0; i < ruleCount; i++)
             {
                 var currentRule = new Rule();
+                var currentVisualRule = _rulesListView[i];
 
                 var visualRuleId = i;
 
@@ -485,7 +506,7 @@ namespace UnityPrefabWizard.Editor
                 
                 // 'Name starts with' foldout
                 currentRule.MeshNameStartsWith = new List<string>();
-                var nameStartsWithFoldout = _root.Q<Foldout>("FO_IncludeNameStartsWith" + i);
+                var nameStartsWithFoldout = currentVisualRule.Q<Foldout>(LabelFoldoutIncludeNameStartsWith);
                 var nameStartsWithFoldoutChildCount = nameStartsWithFoldout.childCount;
                 for (var j = 1; j < nameStartsWithFoldoutChildCount; j++)
                 {
@@ -493,8 +514,23 @@ namespace UnityPrefabWizard.Editor
                     currentRule.MeshNameStartsWith.Add(textField.text);
                 }
 
-                currentRule.MeshNameContains = new List<string>() {""};
+                // 'Name contains' foldout
+                currentRule.MeshNameContains = new List<string>();
+                var nameContainsFoldout = currentVisualRule.Q<Foldout>(LabelFoldoutIncludeNameContains);
+                var nameContainsFoldoutChildCount = nameContainsFoldout.childCount;
+                for (var j = 1; j < nameContainsFoldoutChildCount; j++)
+                {
+                    var textField = (TextField) nameContainsFoldout.hierarchy.ElementAt(1).ElementAt(j).ElementAt(1);
+                    currentRule.MeshNameContains.Add(textField.text);
+                }
+                
+                // 'Use Mesh Name'
                 currentRule.IsPrefabUseMeshName = true;
+                 
+                
+                
+                
+                
                 currentRule.IsPrefabUseMeshNameReplace = false;
                 currentRule.PrefabUseMeshNameReplaceSource = "";
                 currentRule.PrefabUseMeshNameReplaceTarget = "";
