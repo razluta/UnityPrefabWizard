@@ -17,53 +17,53 @@
             <ui:VisualElement name="Prefab" style="flex-grow: 0; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
                 <ui:Label text="Create a Prefab ..." />
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:Toggle value="true" />
+                    <ui:Toggle value="true" name="TG_UseMeshName" />
                     <ui:Label text="use mesh name" style="flex-grow: 1; -unity-text-align: middle-left;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:Toggle value="false" />
+                    <ui:Toggle value="false" name="TG_UseMeshNameReplace" />
                     <ui:Label text="use mesh name, but replace" style="flex-grow: 0; flex-shrink: 0; -unity-text-align: middle-left;" />
-                    <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; -unity-text-align: upper-left; flex-shrink: 1; white-space: normal;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" name="TF_UseMeshNameReplaceSource" style="flex-grow: 1; -unity-text-align: upper-left; flex-shrink: 1; white-space: normal;" />
                     <ui:Label text="with" style="flex-grow: 0; flex-shrink: 0; -unity-text-align: middle-left;" />
-                    <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; flex-shrink: 1; flex-wrap: nowrap; white-space: normal;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" name="TF_UseMeshNameReplaceTarget" style="flex-grow: 1; flex-shrink: 1; flex-wrap: nowrap; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:Toggle value="false" />
+                    <ui:Toggle value="false" name="TG_UseUniqueName" />
                     <ui:Label text="use unique name" style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
-                    <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; white-space: normal;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" name="TF_UseUniqueNameTarget" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row; margin-top: 10px;">
-                    <ui:Toggle value="false" />
+                    <ui:Toggle value="false" name="TG_AddSuffix" />
                     <ui:Label text="add suffix" style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
-                    <ui:TextField picking-mode="Ignore" value="filler text" style="flex-grow: 1; white-space: normal;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" name="TF_AddSuffixTarget" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:Label text="Material" style="-unity-text-align: upper-center; -unity-font-style: bold;" />
             <ui:VisualElement name="Material" style="flex-grow: 1; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:Toggle value="true" />
+                    <ui:Toggle value="true" name="TG_CreateMaterialForMesh" />
                     <ui:Label text="create a material for the mesh" style="flex-grow: 1;" />
                 </ui:VisualElement>
                 <ui:Label text="... give it this shader ..." style="-unity-text-align: upper-left;" />
                 <uie:ObjectField name="OF_Shader" />
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:Toggle value="true" />
+                    <ui:Toggle value="true" name="TG_MaterialUseMeshName" />
                     <ui:Label text="for naming, use &lt;MeshName&gt; + " style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
-                    <ui:TextField picking-mode="Ignore" value="filler text" text="Mat" style="flex-grow: 1; white-space: normal;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" text="Mat" name="TF_MaterialUseMeshNameTarget" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:Foldout text="shader inputs and equivalent texture suffixes matchings" name="FO_TextureInputs" style="margin-left: 0;">
                     <ui:Button text="Add New Field" name="BT_AddTextureInputMatching" style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
                 </ui:Foldout>
                 <ui:VisualElement style="flex-direction: row; margin-left: 19px;">
                     <ui:Label text="texture extension is" style="flex-grow: 0; flex-shrink: 1; -unity-text-align: middle-left;" />
-                    <ui:TextField picking-mode="Ignore" value="filler text" text=".tga" style="flex-grow: 1; white-space: normal;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" text=".tga" name="TF_TextureExtensionTarget" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:Toggle value="true" />
+                    <ui:Toggle value="true" name="TG_AssignAllTexturesToMaterial" />
                     <ui:Label text="assign all textures that match the &lt;MeshName&gt; + &lt;Suffix&gt;" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row;">
-                    <ui:Toggle value="true" />
+                    <ui:Toggle value="true" name="TG_AssignMaterialToMesh" />
                     <ui:Label text="assign new material to the mesh" style="flex-grow: 1; white-space: normal;" />
                 </ui:VisualElement>
             </ui:VisualElement>
