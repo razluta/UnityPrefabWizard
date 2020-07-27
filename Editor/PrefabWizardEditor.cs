@@ -556,20 +556,23 @@ namespace UnityPrefabWizard.Editor
                 currentRule.PrefabUseUniqueNameTarget = prefabUseUniqueNameTarget;
                 
                 // 'Add Suffix'
+                var isPrefabAddSuffix = currentVisualRule.Q<Toggle>(LabelToggleAddSuffix).value;
+                currentRule.IsPrefabAddSuffix = isPrefabAddSuffix;
+                var prefabAddSuffixTarget = currentVisualRule.Q<TextField>(LabelTextFieldAddSuffixTarget).text;
+                currentRule.PrefabAddSuffixTarget = prefabAddSuffixTarget;
+                
+                // 'Create Material for the Mesh'
+                var isMaterialCreateMaterialForMesh = currentVisualRule.Q<Toggle>(LabelToggleCreateMaterialForMesh).value;
+                currentRule.IsMaterialCreateMaterialForMesh = isMaterialCreateMaterialForMesh;
+                
+                // 'Give it this shader'
+                var materialShaderTarget = (Shader) currentVisualRule.Q<ObjectField>(LabelObjectFieldShader).value;
+                currentRule.MaterialShaderTarget = materialShaderTarget;
                 
                 
                 
                 
                 
-                
-                
-                
-                
-                
-                currentRule.IsPrefabAddSuffix = false;
-                currentRule.PrefabAddSuffixTarget = "";
-                currentRule.IsMaterialCreateMaterialForMesh = true;
-                currentRule.MaterialShaderTarget = null;
                 currentRule.IsMaterialMeshNamePlusSuffix = false;
                 currentRule.MaterialMeshNameSuffixTarget = "";
                 currentRule.MaterialShaderInputToTextureSuffixMapping = new Dictionary<string, string>()
