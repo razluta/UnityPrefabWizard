@@ -28,11 +28,11 @@ namespace UnityPrefabWizard
         // Material Rules
         public bool IsMaterialCreateMaterialForMesh { get; set; }
         
-        public bool IsMaterialMeshNamePlusSuffix { get; set; }
-        public string MaterialMeshNameSuffixTarget { get; set; }
-        
         public Shader MaterialShaderTarget { get; set; }
         
+        public bool IsMaterialMeshNamePlusSuffix { get; set; }
+        public string MaterialMeshNameSuffixTarget { get; set; }
+
         public Dictionary<string, string> MaterialShaderInputToTextureSuffixMapping { get; set; }
         
         public string MaterialTextureExtension { get; set; }
