@@ -28,7 +28,7 @@ namespace UnityPrefabWizard
         // Material Rules
         public bool IsMaterialCreateMaterialForMesh { get; set; }
         
-        public Shader MaterialShaderTarget { get; set; }
+        public string MaterialShaderTargetRelativePath { get; set; }
         
         public bool IsMaterialMeshNamePlusSuffix { get; set; }
         public string MaterialMeshNameSuffixTarget { get; set; }
