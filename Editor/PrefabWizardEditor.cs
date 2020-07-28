@@ -451,10 +451,15 @@ namespace UnityPrefabWizard.Editor
                 
                 // 'create a material for the mesh'
                 // 'give the material this shader'
-                if (rule.MaterialShaderTarget)
+                if (!String.IsNullOrWhiteSpace(rule.MaterialShaderTargetRelativePath))
                 {
-                    var material = new Material(rule.MaterialShaderTarget);
-                    material.name = selectedAsset.name;
+                    var shader = AssetDatabase.LoadAssetAtPath<Shader>(rule.MaterialShaderTargetRelativePath);
+                    if (shader == null)
+                    {
+                        continue;
+                    }
+
+                    var material = new Material(shader) {name = selectedAsset.name};
 
                     // 'for naming, use <MeshName> + custom string'
                     if (rule.IsMaterialMeshNamePlusSuffix)
@@ -591,7 +596,7 @@ namespace UnityPrefabWizard.Editor
                 
                 // 'Give it this shader'
                 var materialShaderTarget = (Shader) currentVisualRule.Q<ObjectField>(LabelObjectFieldShader).value;
-                currentRule.MaterialShaderTarget = materialShaderTarget;
+                currentRule.MaterialShaderTargetRelativePath = AssetDatabase.GetAssetPath(materialShaderTarget);
                 
                 // 'For naming, use <MeshName> + ... (Mat)
                 var isMaterialMeshNamePlusSuffix = currentVisualRule.Q<Toggle>(LabelToggleMaterialUseMeshNamePlusSuffix).value;
@@ -676,26 +681,33 @@ namespace UnityPrefabWizard.Editor
                 isPrefabUseMeshNameReplaceTarget.value = currentRule.PrefabUseMeshNameReplaceTarget;
 
                 // 'Use Unique Name'
-                
-                
-                
-                
-                
-                
-                
-                
-                
+                var isPrefabUseUniqueName = newRule.Q<Toggle>(LabelToggleUseUniqueName);
+                isPrefabUseUniqueName.value = currentRule.IsPrefabUseUniqueName;
+                var isPrefabUseUniqueNameTarget = newRule.Q<TextField>(LabelTextFieldUseUniqueNameTarget);
+                isPrefabUseUniqueNameTarget.value = currentRule.PrefabUseUniqueNameTarget;
 
                 // 'Add Suffix'
-
-
+                var isPrefabAddSuffix = newRule.Q<Toggle>(LabelToggleAddSuffix);
+                isPrefabAddSuffix.value = currentRule.IsPrefabAddSuffix;
+                var isPrefabAddSuffixTarget = newRule.Q<TextField>(LabelTextFieldAddSuffixTarget);
+                isPrefabAddSuffixTarget.value = currentRule.PrefabAddSuffixTarget;
+                
                 // 'Create Material for the Mesh'
-
+                var isMaterialCreateMaterialForMesh = newRule.Q<Toggle>(LabelToggleCreateMaterialForMesh);
+                isMaterialCreateMaterialForMesh.value = currentRule.IsMaterialCreateMaterialForMesh;
 
                 // 'Give it this shader'
-
+                var materialShaderTarget = newRule.Q<ObjectField>(LabelObjectFieldShader);
+                var shader = AssetDatabase.LoadAssetAtPath<Shader>(currentRule.MaterialShaderTargetRelativePath);
+                materialShaderTarget.value = shader;
 
                 // 'For naming, use <MeshName> + ... (Mat)
+
+
+
+
+
+
 
 
                 // 'Shader Inputs and Equivalent Texture Suffixes Matchings'
