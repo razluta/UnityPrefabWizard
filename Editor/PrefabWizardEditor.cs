@@ -213,6 +213,11 @@ namespace UnityPrefabWizard.Editor
 
         private void AddNewRule()
         {
+            var newRule = GetNewRule();
+        }
+
+        private VisualElement GetNewRule()
+        {
             var id = GetNextAvailableId();
             
             _singleRuleVisualTree.CloneTree(
@@ -272,14 +277,16 @@ namespace UnityPrefabWizard.Editor
             removeButton.clickable.clicked += () => RemoveRule(newRuleVisualElement, id);
             removeButton.style.backgroundColor = randomColor;
             removeButton.style.color = inverseRandomColor;
+
+            return newRuleVisualElement;
         }
 
-        private void AddNewSingleEntryToFoldout(Foldout foldout)
+        private void AddNewSingleEntryToFoldout(Foldout foldout, string entryText="")
         {
             var newIncludeNameStartsWithVisualElement = new VisualElement();
             newIncludeNameStartsWithVisualElement.style.flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row);
-            
-            var newIncludeNameStartsWithTextField = new TextField();
+
+            var newIncludeNameStartsWithTextField = new TextField {value = entryText};
             newIncludeNameStartsWithTextField.style.flexGrow = 1;
             
             var newIncludeNameStartsWithButton = new Button()
@@ -626,7 +633,83 @@ namespace UnityPrefabWizard.Editor
 
         private void UpdateRulesListViewContentsWithActiveRuleList()
         {
+            // source: _activeRuleList
+            // target: _rulesListView
             
+            var activeRuleCount = _activeRuleList.Count;
+            _rulesListView.Clear();
+
+            for (var i=0; i<activeRuleCount; i++)
+            {
+                var currentRule = _activeRuleList[i];
+                var newRule = GetNewRule();
+                
+                // Rule Id
+                var visualRuleId = i;
+                
+                // 'Name starts with' foldout
+                var nameStartsWithEntryCount = currentRule.MeshNameStartsWith.Count;
+                var nameStartsWithFoldout = newRule.Q<Foldout>(LabelFoldoutIncludeNameStartsWith);
+                for(var j = 0; j < nameStartsWithEntryCount; j++)
+                {
+                    AddNewSingleEntryToFoldout(nameStartsWithFoldout, currentRule.MeshNameStartsWith[j]);
+                }
+
+                // 'Name contains' foldout
+                var nameContainsEntryCount = currentRule.MeshNameContains.Count;
+                var nameContainsFoldout = newRule.Q<Foldout>(LabelFoldoutIncludeNameContains);
+                for(var j = 0; j < nameContainsEntryCount; j++)
+                {
+                    AddNewSingleEntryToFoldout(nameContainsFoldout, currentRule.MeshNameContains[j]);
+                }
+
+                // 'Use Mesh Name'
+                var isPrefabUseMeshName = newRule.Q<Toggle>(LabelToggleUseMeshName);
+                isPrefabUseMeshName.value = currentRule.IsPrefabUseMeshName;
+                
+                // 'Use Mesh Name, but Replace ... with ...'
+                var isPrefabUseMeshNameReplace = newRule.Q<Toggle>(LabelToggleUseMeshNameReplace);
+                isPrefabUseMeshNameReplace.value = currentRule.IsPrefabUseMeshNameReplace;
+                var isPrefabUseMeshNameReplaceSource = newRule.Q<TextField>(LabelTextFieldUseMeshNameReplaceSource);
+                isPrefabUseMeshNameReplaceSource.value = currentRule.PrefabUseMeshNameReplaceSource;
+                var isPrefabUseMeshNameReplaceTarget = newRule.Q<TextField>(LabelTextFieldUseMeshNameReplaceTarget);
+                isPrefabUseMeshNameReplaceTarget.value = currentRule.PrefabUseMeshNameReplaceTarget;
+
+                // 'Use Unique Name'
+                
+                
+                
+                
+                
+                
+                
+                
+                
+
+                // 'Add Suffix'
+
+
+                // 'Create Material for the Mesh'
+
+
+                // 'Give it this shader'
+
+
+                // 'For naming, use <MeshName> + ... (Mat)
+
+
+                // 'Shader Inputs and Equivalent Texture Suffixes Matchings'
+
+
+                // 'Texture extension is ..."
+
+
+                // 'Assign all textures that match the <MeshName> + <Suffix>
+
+
+                // Assign the new material to the mesh
+
+            }
         }
     }                                                                                                                                        
 }
