@@ -20,6 +20,7 @@ namespace UnityPrefabWizard.Editor
         
         private const string PrefabExtension = ".prefab";
         private const string JsonExtension = "json";
+        private const string MaterialExtension = ".mat";
         private const string DefaultRulesFileName = "Rules";
 
         private const string LabelUxmlMainPrefabWizard = "CS_PrefabWizard";
@@ -412,8 +413,31 @@ namespace UnityPrefabWizard.Editor
             // Parse every rule in the rule list
             foreach (var rule in _activeRuleList)
             {
+                var hasMetCondition = false;
+                foreach (var nameStartsWithEntry in rule.MeshNameStartsWith)
+                {
+                    if (selectedAsset.name.StartsWith(nameStartsWithEntry))
+                    {
+                        hasMetCondition = true;
+                    }
+                }
+                
+                foreach (var nameContainsEntry in rule.MeshNameContains)
+                {
+                    if (selectedAsset.name.Contains(nameContainsEntry))
+                    {
+                        hasMetCondition = true;
+                    }
+                }
+
+                if (!hasMetCondition)
+                {
+                    return;
+                }
+                
                 // Instantiate the model in the current scene and name it in preparation for creating the prefab out of it
                 var modelInScene = (GameObject) Instantiate(selectedAsset);
+                modelInScene.name = selectedAsset.name;
 
                 // 'use mesh name'
                 if (rule.IsPrefabUseMeshName)
@@ -498,7 +522,7 @@ namespace UnityPrefabWizard.Editor
                     
                     // Save the material to the same folder
                     AssetDatabase.CreateAsset(material, 
-                        Path.Combine(assetDirectoryPath, material.name + rule.MaterialMeshNameSuffixTarget));
+                        Path.Combine(assetDirectoryPath, material.name + MaterialExtension));
 
                     // Apply the material to the sub-mesh
                     renderer.material = material;
