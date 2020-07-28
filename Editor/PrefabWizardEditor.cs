@@ -702,25 +702,33 @@ namespace UnityPrefabWizard.Editor
                 materialShaderTarget.value = shader;
 
                 // 'For naming, use <MeshName> + ... (Mat)
-
-
-
-
-
-
-
-
-                // 'Shader Inputs and Equivalent Texture Suffixes Matchings'
-
-
+                var isMaterialMeshNamePlusSuffix = newRule.Q<Toggle>(LabelToggleMaterialUseMeshNamePlusSuffix);
+                isMaterialMeshNamePlusSuffix.value = currentRule.IsMaterialMeshNamePlusSuffix;
+                var materialMeshNameSuffixTarget = newRule.Q<TextField>(LabelTextFieldMaterialUseMeshNamePlusSuffixTarget);
+                materialMeshNameSuffixTarget.value = currentRule.MaterialMeshNameSuffixTarget;
+                
+                var materialShaderInputToTextureSuffixMapping = newRule.Q<Foldout>(
+                    LabelFoldoutTextureInputs);
+                materialShaderInputToTextureSuffixMapping.Clear();
+                foreach(var mapping in currentRule.MaterialShaderInputToTextureSuffixMapping)
+                {
+                    AddNewDoubleEntryToFoldout(
+                        materialShaderInputToTextureSuffixMapping, 
+                        mapping.Key,
+                        mapping.Value);
+                }
+                
                 // 'Texture extension is ..."
-
+                var materialTextureExtension = newRule.Q<TextField>(LabelTextFieldTextureExtensionTarget);
+                materialTextureExtension.value = currentRule.MaterialTextureExtension;
 
                 // 'Assign all textures that match the <MeshName> + <Suffix>
-
-
+                var isMaterialAssignAllTexturesMatchMeshName = newRule.Q<Toggle>(LabelToggleAssignAllTexturesToMaterial);
+                isMaterialAssignAllTexturesMatchMeshName.value = currentRule.IsMaterialAssignAllTexturesMatchMeshName;
+                
                 // Assign the new material to the mesh
-
+                var isMaterialAssignMaterialToMesh = newRule.Q<Toggle>(LabelToggleAssignMaterialToMesh);
+                isMaterialAssignMaterialToMesh.value = currentRule.IsMaterialAssignMaterialToMesh;
             }
         }
     }                                                                                                                                        
