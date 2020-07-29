@@ -317,7 +317,19 @@ namespace UnityPrefabWizard.Editor
         private void CreatePrefabForSelectedMesh()
         {
             var selectedAsset = Selection.activeObject;
-            CreatePrefab.CreatePrefabForMesh(selectedAsset, _activeRuleList);
+            var customLog = CreatePrefab.CreatePrefabForMesh(selectedAsset, _activeRuleList);
+            
+            // Update the log list
+            _logListView.Clear();
+
+            foreach (var logEntry in customLog)
+            {
+                _listEntryVisualTreeAsset.CloneTree(_logListView);
+                _listEntryButton = _root.Q<Button>(Constants.LabelButtonLogEntry);
+                _listEntryButton.name = logEntry;
+                _listEntryButton.text = logEntry;
+                _logListView.Add(_listEntryButton);
+            }
         }
 
         private void ClearLog()
