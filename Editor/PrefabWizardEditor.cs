@@ -11,64 +11,6 @@ namespace UnityPrefabWizard.Editor
 {
     public class PrefabWizardEditor : EditorWindow
     {
-        private const string VersionNumber = "v.0.1.0.20200727";
-
-        private const int WindowWidth = 500;
-        private const int WindowHeight = 800;
-        private const string WindowName = "Prefab Wizard";
-        private const string WindowMenuPath = "Art Tools/" + WindowName;
-        
-        private const string PrefabExtension = ".prefab";
-        private const string JsonExtension = "json";
-        private const string MaterialExtension = ".mat";
-        private const string DefaultRulesFileName = "Rules";
-
-        private const string LabelUxmlMainPrefabWizard = "CS_PrefabWizard";
-        private const string LabelListViewRulesList = "LV_RulesList";
-        private const string LabelUxmlSingleRule = "CS_SingleRule";
-        private const string LabelVisualElementSingleRule = "VE_SingleRule";
-        private const string LabelButtonLoadRules = "BT_LoadRules";
-        private const string LabelButtonSaveRules = "BT_SaveRules";
-        private const string LabelButtonAddRule = "BT_AddRule";
-        private const string LabelButtonClearRules = "BT_ClearRules";
-        private const string LabelButtonCreatePrefab = "BT_CreatePrefab";
-        private const string LabelListViewLog = "LV_Log";
-        private const string LabelUxmlLogEntry = "CS_LogEntry";
-        private const string LabelButtonLogEntry = "BT_LogEntry";
-        private const string LabelButtonClearLog = "BT_ClearLog";
-        private const string LabelLabelVersion = "LB_Version";
-
-        private const string LabelButtonNameStartsWith = "BT_IncludeNameStartsWith";
-        private const string LabelFoldoutIncludeNameStartsWith = "FO_IncludeNameStartsWith";
-        private const string LabelButtonNameContains = "BT_IncludeNameContains";
-        private const string LabelFoldoutIncludeNameContains = "FO_IncludeNameContains";
-        private const string LabelToggleUseMeshName = "TG_UseMeshName";
-        private const string LabelToggleUseMeshNameReplace = "TG_UseMeshNameReplace";
-        private const string LabelTextFieldUseMeshNameReplaceSource = "TF_UseMeshNameReplaceSource";
-        private const string LabelTextFieldUseMeshNameReplaceTarget = "TF_UseMeshNameReplaceTarget";
-        private const string LabelToggleUseUniqueName = "TG_UseUniqueName";
-        private const string LabelTextFieldUseUniqueNameTarget = "TF_UseUniqueNameTarget";
-        private const string LabelToggleAddSuffix = "TG_AddSuffix";
-        private const string LabelTextFieldAddSuffixTarget = "TF_AddSuffixTarget";
-        private const string LabelToggleCreateMaterialForMesh = "TG_CreateMaterialForMesh";
-        private const string LabelObjectFieldShader = "OF_Shader";
-        private const string LabelToggleMaterialUseMeshNamePlusSuffix = "TG_MaterialUseMeshName";
-        private const string LabelTextFieldMaterialUseMeshNamePlusSuffixTarget = "TF_MaterialUseMeshNameTarget";
-        private const string LabelFoldoutTextureInputs = "FO_TextureInputs";
-        private const string LabelTextFieldTextureExtensionTarget = "TF_TextureExtensionTarget";
-        private const string LabelToggleAssignAllTexturesToMaterial = "TG_AssignAllTexturesToMaterial";
-        private const string LabelToggleAssignMaterialToMesh = "TG_AssignMaterialToMesh";
-
-        private const string LabelButtonAddTextureInputMatching = "BT_AddTextureInputMatching";
-        private const string LabelButtonRemove = "BT_Remove";
-        
-        private const string TitleError = "Error";
-        private const string MessageErrorBodySelectOneMesh = "Please select one mesh in the project window!";
-        private const string MessageErrorTextureDoesNotExist = "The expected texture does not exist in the project: ";
-        private const string LabelButtonErrorOk = "OK";
-        private const string MessageSuccessfullySavedRules = "Successfully saved rules to path: ";
-        private const string MessageSuccessfullyLoadedRules = "Successfully loaded rules from path: ";
-
         private readonly Dictionary<string, string> _defaultShaderPropertyToTextureSuffixMatching = 
             new Dictionary<string, string>()
         {
@@ -103,17 +45,12 @@ namespace UnityPrefabWizard.Editor
 
         private List<Rule> _activeRuleList;
 
-        [MenuItem(WindowMenuPath)]                                                                                     
+        [MenuItem(Constants.WindowMenuPath)]                                                                                     
         public static void ShowWindow()                                                                                                      
-        {                                                                                                                                    
-            // Opens the window, otherwise focuses it if it’s already open.                                                                  
+        {
             var window = GetWindow<PrefabWizardEditor>();
-
-            // Adds a title to the window.                                                                                                   
-            window.titleContent = new GUIContent(WindowName);                                                                
-                                                                                                                                             
-            // Sets a minimum size to the window.                                                                                            
-            window.minSize = new Vector2(WindowWidth, WindowHeight);
+            window.titleContent = new GUIContent(Constants.WindowName);
+            window.minSize = new Vector2(Constants.WindowWidth, Constants.WindowHeight);
         }                                                                                                                                    
                                                                                                                                              
         private void OnEnable()
@@ -126,52 +63,51 @@ namespace UnityPrefabWizard.Editor
             _root = rootVisualElement;
             
             // Instantiate contents
-            _contents = Resources.Load<VisualTreeAsset>(LabelUxmlMainPrefabWizard);
+            _contents = Resources.Load<VisualTreeAsset>(Constants.LabelUxmlMainPrefabWizard);
             _contents.CloneTree(_root);
 
-            _rulesListView = _root.Q<ListView>(LabelListViewRulesList);
+            _rulesListView = _root.Q<ListView>(Constants.LabelListViewRulesList);
             
             // Single Rule Reference
-            _singleRuleVisualTree = Resources.Load<VisualTreeAsset>(LabelUxmlSingleRule);
+            _singleRuleVisualTree = Resources.Load<VisualTreeAsset>(Constants.LabelUxmlSingleRule);
 
             // Load Rules Button
-            _loadRules = _root.Q<Button>(LabelButtonLoadRules);
+            _loadRules = _root.Q<Button>(Constants.LabelButtonLoadRules);
             _loadRules.clickable.clicked += LoadRules;
 
             // Save Rules Button
-            _saveRules = _root.Q<Button>(LabelButtonSaveRules);
+            _saveRules = _root.Q<Button>(Constants.LabelButtonSaveRules);
             _saveRules.clickable.clicked += SaveRules;
             
             // Add Rule Button
-            _addRule = _root.Q<Button>(LabelButtonAddRule);
+            _addRule = _root.Q<Button>(Constants.LabelButtonAddRule);
             _addRule.clickable.clicked += AddNewRule;
             
             // Clear Rules Button
-            _clearRules = _root.Q<Button>(LabelButtonClearRules);
+            _clearRules = _root.Q<Button>(Constants.LabelButtonClearRules);
             _clearRules.clickable.clicked += ClearRules;
             
             // Create Prefab Button
-            _createPrefab = _root.Q<Button>(LabelButtonCreatePrefab);
+            _createPrefab = _root.Q<Button>(Constants.LabelButtonCreatePrefab);
             _createPrefab.clickable.clicked += CreatePrefabForSelectedMesh;
             
             // Log List View
-            _logListView = _root.Q<ListView>(LabelListViewLog);
-            _listEntryVisualTreeAsset = Resources.Load<VisualTreeAsset>(LabelUxmlLogEntry);
+            _logListView = _root.Q<ListView>(Constants.LabelListViewLog);
+            _listEntryVisualTreeAsset = Resources.Load<VisualTreeAsset>(Constants.LabelUxmlLogEntry);
             _logListView.Clear();
             
             // ClearLog
-            _clearLog = _root.Q<Button>(LabelButtonClearLog);
+            _clearLog = _root.Q<Button>(Constants.LabelButtonClearLog);
             _clearLog.clickable.clicked += ClearLog;
             
             // Version Label
-            _labelVersion = _root.Q<Label>(LabelLabelVersion);
-            _labelVersion.text = VersionNumber;
-
+            _labelVersion = _root.Q<Label>(Constants.LabelLabelVersion);
+            _labelVersion.text = Constants.VersionNumber;
         }
 
         private void LoadRules()
         {
-            var rulesPath = EditorUtility.OpenFilePanel("", "", JsonExtension);
+            var rulesPath = EditorUtility.OpenFilePanel("", "", Constants.JsonExtension);
             if (String.IsNullOrWhiteSpace(rulesPath))
             {
                 
@@ -184,15 +120,15 @@ namespace UnityPrefabWizard.Editor
             // Update the log list
             _logListView.Clear(); 
             _listEntryVisualTreeAsset.CloneTree(_logListView);
-            _listEntryButton = _root.Q<Button>(LabelButtonLogEntry);
-            _listEntryButton.text = MessageSuccessfullyLoadedRules + rulesPath;
+            _listEntryButton = _root.Q<Button>(Constants.LabelButtonLogEntry);
+            _listEntryButton.text = Constants.MessageSuccessfullyLoadedRules + rulesPath;
             _logListView.Add(_listEntryButton);
         }
 
         private void SaveRules()
         {
             var rulesPath = EditorUtility.SaveFilePanel(
-                "", "", DefaultRulesFileName, JsonExtension);
+                "", "", Constants.DefaultRulesFileName, Constants.JsonExtension);
 
             if (String.IsNullOrWhiteSpace(rulesPath))
             {
@@ -207,8 +143,8 @@ namespace UnityPrefabWizard.Editor
             // Update the log list
             _logListView.Clear(); 
             _listEntryVisualTreeAsset.CloneTree(_logListView);
-            _listEntryButton = _root.Q<Button>(LabelButtonLogEntry);
-            _listEntryButton.text = MessageSuccessfullySavedRules + rulesPath;
+            _listEntryButton = _root.Q<Button>(Constants.LabelButtonLogEntry);
+            _listEntryButton.text = Constants.MessageSuccessfullySavedRules + rulesPath;
             _logListView.Add(_listEntryButton);
         }
 
@@ -231,7 +167,7 @@ namespace UnityPrefabWizard.Editor
             var inverseRandomColor = 
                 (randomColor.r + randomColor.g + randomColor.b) / 3 > 0.5f ? Color.black : Color.white;
             
-            var newRuleVisualElement = _root.Q<VisualElement>(LabelVisualElementSingleRule);
+            var newRuleVisualElement = _root.Q<VisualElement>(Constants.LabelVisualElementSingleRule);
             newRuleVisualElement.name += id.ToString();
             
             newRuleVisualElement.style.borderTopColor = new StyleColor(randomColor);
@@ -240,25 +176,25 @@ namespace UnityPrefabWizard.Editor
             newRuleVisualElement.style.borderLeftColor = new StyleColor(randomColor);
             
             // 'Name starts with' foldout
-            var nameStartsWithFoldout = newRuleVisualElement.Q<Foldout>(LabelFoldoutIncludeNameStartsWith);
+            var nameStartsWithFoldout = newRuleVisualElement.Q<Foldout>(Constants.LabelFoldoutIncludeNameStartsWith);
 
             // Add new field Button for 'name starts with'
-            var nameStartsWithButton = newRuleVisualElement.Q<Button>(LabelButtonNameStartsWith);
+            var nameStartsWithButton = newRuleVisualElement.Q<Button>(Constants.LabelButtonNameStartsWith);
             nameStartsWithButton.clickable.clicked += () => AddNewSingleEntryToFoldout(nameStartsWithFoldout);
             
             // 'Name contains' foldout
-            var nameContainsFoldout = newRuleVisualElement.Q<Foldout>(LabelFoldoutIncludeNameContains);
+            var nameContainsFoldout = newRuleVisualElement.Q<Foldout>(Constants.LabelFoldoutIncludeNameContains);
 
             // Add new field Button for 'name contains'
-            var nameContainsButton = newRuleVisualElement.Q<Button>(LabelButtonNameContains);
+            var nameContainsButton = newRuleVisualElement.Q<Button>(Constants.LabelButtonNameContains);
             nameContainsButton.clickable.clicked += () => AddNewSingleEntryToFoldout(nameContainsFoldout);
             
             // Shader slot
-            var shaderObjectField = newRuleVisualElement.Q<ObjectField>(LabelObjectFieldShader);
+            var shaderObjectField = newRuleVisualElement.Q<ObjectField>(Constants.LabelObjectFieldShader);
             shaderObjectField.objectType = typeof(Shader);
             
             // 'Texture Input' foldout
-            var textureInputFoldout = newRuleVisualElement.Q<Foldout>(LabelFoldoutTextureInputs);
+            var textureInputFoldout = newRuleVisualElement.Q<Foldout>(Constants.LabelFoldoutTextureInputs);
             
             // Default Values for 'Texture Input' foldout
             foreach (var mapping in _defaultShaderPropertyToTextureSuffixMatching)
@@ -270,11 +206,11 @@ namespace UnityPrefabWizard.Editor
             }
 
             // Add new field Button for 'texture inputs'
-            var textureInputsButton = newRuleVisualElement.Q<Button>(LabelButtonAddTextureInputMatching);
+            var textureInputsButton = newRuleVisualElement.Q<Button>(Constants.LabelButtonAddTextureInputMatching);
             textureInputsButton.clickable.clicked += () => AddNewDoubleEntryToFoldout(textureInputFoldout);
 
             // Remove Button
-            var removeButton = newRuleVisualElement.Q<Button>(LabelButtonRemove);
+            var removeButton = newRuleVisualElement.Q<Button>(Constants.LabelButtonRemove);
             removeButton.clickable.clicked += () => RemoveRule(newRuleVisualElement, id);
             removeButton.style.backgroundColor = randomColor;
             removeButton.style.color = inverseRandomColor;
@@ -380,167 +316,8 @@ namespace UnityPrefabWizard.Editor
 
         private void CreatePrefabForSelectedMesh()
         {
-            // Obtain the selected model
             var selectedAsset = Selection.activeObject;
-
-            if (selectedAsset == null)
-            {
-                EditorUtility.DisplayDialog(TitleError, MessageErrorBodySelectOneMesh, LabelButtonErrorOk);
-                return;
-            }
-            
-            var selectedAssetPath = AssetDatabase.GetAssetPath(selectedAsset);
-            if (String.IsNullOrWhiteSpace(selectedAssetPath))
-            {
-                EditorUtility.DisplayDialog(TitleError, MessageErrorBodySelectOneMesh, LabelButtonErrorOk);
-                return;
-            }
-            
-            // Check if the asset is a model
-            var model = (Mesh) AssetDatabase.LoadAssetAtPath(selectedAssetPath, typeof(Mesh));
-            if (model == null)
-            {
-                EditorUtility.DisplayDialog(TitleError, MessageErrorBodySelectOneMesh, LabelButtonErrorOk);
-                return;
-            }
-            
-            var assetDirectoryPath = Path.GetDirectoryName(selectedAssetPath);
-            if (String.IsNullOrWhiteSpace(assetDirectoryPath))
-            {
-                return;
-            }
-            
-            // Parse every rule in the rule list
-            foreach (var rule in _activeRuleList)
-            {
-                var hasMetCondition = false;
-                foreach (var nameStartsWithEntry in rule.MeshNameStartsWith)
-                {
-                    if (selectedAsset.name.StartsWith(nameStartsWithEntry))
-                    {
-                        hasMetCondition = true;
-                    }
-                }
-                
-                foreach (var nameContainsEntry in rule.MeshNameContains)
-                {
-                    if (selectedAsset.name.Contains(nameContainsEntry))
-                    {
-                        hasMetCondition = true;
-                    }
-                }
-
-                if (!hasMetCondition)
-                {
-                    return;
-                }
-                
-                // Instantiate the model in the current scene and name it in preparation for creating the prefab out of it
-                var modelInScene = (GameObject) Instantiate(selectedAsset);
-                modelInScene.name = selectedAsset.name;
-
-                // 'use mesh name'
-                if (rule.IsPrefabUseMeshName)
-                {
-                    modelInScene.name = selectedAsset.name;
-                }
-                // 'use mesh name, but replace *** with ***
-                else if (rule.IsPrefabUseMeshNameReplace)
-                {
-                    if (!String.IsNullOrWhiteSpace(rule.PrefabUseMeshNameReplaceSource) &&
-                        !String.IsNullOrWhiteSpace(rule.PrefabUseMeshNameReplaceTarget))
-                    {
-                        modelInScene.name = selectedAsset.name.Replace(
-                            rule.PrefabUseMeshNameReplaceSource,
-                            rule.PrefabUseMeshNameReplaceTarget);
-                    }
-                }
-                // 'use unique name'
-                else if (rule.IsPrefabUseUniqueName)
-                {
-                    if (!String.IsNullOrWhiteSpace(rule.PrefabUseUniqueNameTarget))
-                    {
-                        modelInScene.name = rule.PrefabUseUniqueNameTarget;
-                    }
-                }
-
-                // 'add suffix'
-                if (rule.IsPrefabAddSuffix)
-                {
-                    if (!String.IsNullOrWhiteSpace(rule.PrefabAddSuffixTarget))
-                    {
-                        modelInScene.name += rule.PrefabAddSuffixTarget;
-                    }
-                }
-                
-                // 'create a material for the mesh'
-                // 'give the material this shader'
-                if (!String.IsNullOrWhiteSpace(rule.MaterialShaderTargetRelativePath))
-                {
-                    var shader = AssetDatabase.LoadAssetAtPath<Shader>(rule.MaterialShaderTargetRelativePath);
-                    if (shader == null)
-                    {
-                        continue;
-                    }
-
-                    var material = new Material(shader) {name = selectedAsset.name};
-
-                    // 'for naming, use <MeshName> + custom string'
-                    if (rule.IsMaterialMeshNamePlusSuffix)
-                    {
-                        if (!String.IsNullOrWhiteSpace(rule.MaterialMeshNameSuffixTarget))
-                        {
-                            material.name = selectedAsset.name + rule.MaterialMeshNameSuffixTarget;
-                        }
-                    }
-                    
-                    // 'shader inputs and equivalent texture suffixes matchings'
-                    foreach (var mapping in rule.MaterialShaderInputToTextureSuffixMapping)
-                    {
-                        // assign all textures that match the <MeshName>
-                        var shaderProperty = mapping.Key;
-                        var textureNameSuffix = mapping.Value;
-
-                        var expectedTexturePath = Path.Combine(
-                            assetDirectoryPath,
-                            selectedAsset.name + textureNameSuffix + rule.MaterialTextureExtension);
-                        
-                        var texture = (Texture2D) AssetDatabase.LoadAssetAtPath(expectedTexturePath, typeof(Texture2D));
-                        
-                        // Exit early if the texture does not exist in the project
-                        if (!texture)
-                        {
-                            // Debug.Log(ErrorTextureDoesNotExist + expectedTexturePath);
-                            continue;
-                        }
-                        
-                        // Assign texture to the appropriate material slot
-                        material.SetTexture(shaderProperty, texture);
-                    }
-                    
-                    var renderer = modelInScene.GetComponent<Renderer>();
-                    
-                    // Save the material to the same folder
-                    AssetDatabase.CreateAsset(material, 
-                        Path.Combine(assetDirectoryPath, material.name + MaterialExtension));
-
-                    // Apply the material to the sub-mesh
-                    renderer.material = material;
-
-                    // Write all unsaved assets to disk
-                    AssetDatabase.SaveAssets();
-                }
-                
-                // Create a prefab
-                PrefabUtility.SaveAsPrefabAssetAndConnect(
-                    modelInScene,
-                    Path.Combine(assetDirectoryPath, modelInScene.name + PrefabExtension),
-                    InteractionMode.UserAction);
-                
-                // Cleanup - remove asset from scene
-                DestroyImmediate(modelInScene);
-            }
-            
+            CreatePrefab.CreatePrefabForMesh(selectedAsset, _activeRuleList);
         }
 
         private void ClearLog()
@@ -550,8 +327,6 @@ namespace UnityPrefabWizard.Editor
 
         private void UpdateActiveRuleListWithRulesListViewContents()
         {
-            // source: _rulesListView 
-            // target: _activeRuleList
             if (_rulesListView == null)
             {
                 return;
@@ -572,7 +347,7 @@ namespace UnityPrefabWizard.Editor
                 
                 // 'Name starts with' foldout
                 currentRule.MeshNameStartsWith = new List<string>();
-                var nameStartsWithFoldout = currentVisualRule.Q<Foldout>(LabelFoldoutIncludeNameStartsWith);
+                var nameStartsWithFoldout = currentVisualRule.Q<Foldout>(Constants.LabelFoldoutIncludeNameStartsWith);
                 var nameStartsWithFoldoutChildCount = nameStartsWithFoldout.childCount;
                 for (var j = 1; j < nameStartsWithFoldoutChildCount; j++)
                 {
@@ -582,7 +357,7 @@ namespace UnityPrefabWizard.Editor
 
                 // 'Name contains' foldout
                 currentRule.MeshNameContains = new List<string>();
-                var nameContains = currentVisualRule.Q<Foldout>(LabelFoldoutIncludeNameContains);
+                var nameContains = currentVisualRule.Q<Foldout>(Constants.LabelFoldoutIncludeNameContains);
                 var nameContainsFoldoutChildCount = nameContains.childCount;
                 for (var j = 1; j < nameContainsFoldoutChildCount; j++)
                 {
@@ -591,47 +366,59 @@ namespace UnityPrefabWizard.Editor
                 }
                 
                 // 'Use Mesh Name'
-                var isPrefabUseMeshName = currentVisualRule.Q<Toggle>(LabelToggleUseMeshName).value;
+                var isPrefabUseMeshName = currentVisualRule.Q<Toggle>(
+                    Constants.LabelToggleUseMeshName).value;
                 currentRule.IsPrefabUseMeshName = isPrefabUseMeshName;
                 
                 // 'Use Mesh Name, but Replace ... with ...'
-                var isPrefabUseMeshNameReplace = currentVisualRule.Q<Toggle>(LabelToggleUseMeshNameReplace).value;
+                var isPrefabUseMeshNameReplace = currentVisualRule.Q<Toggle>(
+                    Constants.LabelToggleUseMeshNameReplace).value;
                 currentRule.IsPrefabUseMeshNameReplace = isPrefabUseMeshNameReplace;
-                var prefabUseMeshNameReplaceSource = currentVisualRule.Q<TextField>(LabelTextFieldUseMeshNameReplaceSource).text;
+                var prefabUseMeshNameReplaceSource = currentVisualRule.Q<TextField>(
+                    Constants.LabelTextFieldUseMeshNameReplaceSource).text;
                 currentRule.PrefabUseMeshNameReplaceSource = prefabUseMeshNameReplaceSource;
-                var prefabUseMeshNameReplaceTarget = currentVisualRule.Q<TextField>(LabelTextFieldUseMeshNameReplaceTarget).text;
+                var prefabUseMeshNameReplaceTarget = currentVisualRule.Q<TextField>(
+                    Constants.LabelTextFieldUseMeshNameReplaceTarget).text;
                 currentRule.PrefabUseMeshNameReplaceTarget = prefabUseMeshNameReplaceTarget;
                 
                 // 'Use Unique Name'
-                var isPrefabUseUniqueName = currentVisualRule.Q<Toggle>(LabelToggleUseUniqueName).value;
+                var isPrefabUseUniqueName = currentVisualRule.Q<Toggle>(
+                    Constants.LabelToggleUseUniqueName).value;
                 currentRule.IsPrefabUseUniqueName = isPrefabUseUniqueName;
-                var prefabUseUniqueNameTarget = currentVisualRule.Q<TextField>(LabelTextFieldUseUniqueNameTarget).text;
+                var prefabUseUniqueNameTarget = currentVisualRule.Q<TextField>(
+                    Constants.LabelTextFieldUseUniqueNameTarget).text;
                 currentRule.PrefabUseUniqueNameTarget = prefabUseUniqueNameTarget;
                 
                 // 'Add Suffix'
-                var isPrefabAddSuffix = currentVisualRule.Q<Toggle>(LabelToggleAddSuffix).value;
+                var isPrefabAddSuffix = currentVisualRule.Q<Toggle>(
+                    Constants.LabelToggleAddSuffix).value;
                 currentRule.IsPrefabAddSuffix = isPrefabAddSuffix;
-                var prefabAddSuffixTarget = currentVisualRule.Q<TextField>(LabelTextFieldAddSuffixTarget).text;
+                var prefabAddSuffixTarget = currentVisualRule.Q<TextField>(
+                    Constants.LabelTextFieldAddSuffixTarget).text;
                 currentRule.PrefabAddSuffixTarget = prefabAddSuffixTarget;
                 
                 // 'Create Material for the Mesh'
-                var isMaterialCreateMaterialForMesh = currentVisualRule.Q<Toggle>(LabelToggleCreateMaterialForMesh).value;
+                var isMaterialCreateMaterialForMesh = currentVisualRule.Q<Toggle>(
+                    Constants.LabelToggleCreateMaterialForMesh).value;
                 currentRule.IsMaterialCreateMaterialForMesh = isMaterialCreateMaterialForMesh;
                 
                 // 'Give it this shader'
-                var materialShaderTarget = (Shader) currentVisualRule.Q<ObjectField>(LabelObjectFieldShader).value;
+                var materialShaderTarget = (Shader) currentVisualRule.Q<ObjectField>(
+                    Constants.LabelObjectFieldShader).value;
                 currentRule.MaterialShaderTargetRelativePath = AssetDatabase.GetAssetPath(materialShaderTarget);
                 
                 // 'For naming, use <MeshName> + ... (Mat)
-                var isMaterialMeshNamePlusSuffix = currentVisualRule.Q<Toggle>(LabelToggleMaterialUseMeshNamePlusSuffix).value;
+                var isMaterialMeshNamePlusSuffix = currentVisualRule.Q<Toggle>(
+                    Constants.LabelToggleMaterialUseMeshNamePlusSuffix).value;
                 currentRule.IsMaterialMeshNamePlusSuffix = isMaterialMeshNamePlusSuffix;
-                var materialMeshNameSuffixTarget = currentVisualRule.Q<TextField>(LabelTextFieldMaterialUseMeshNamePlusSuffixTarget).text;
+                var materialMeshNameSuffixTarget = currentVisualRule.Q<TextField>(
+                    Constants.LabelTextFieldMaterialUseMeshNamePlusSuffixTarget).text;
                 currentRule.MaterialMeshNameSuffixTarget = materialMeshNameSuffixTarget;
                 
                 // 'Shader Inputs and Equivalent Texture Suffixes Matchings'
                 currentRule.MaterialShaderInputToTextureSuffixMapping = new Dictionary<string, string>();
                 var materialShaderInputToTextureSuffixMapping = currentVisualRule.Q<Foldout>(
-                    LabelFoldoutTextureInputs);
+                    Constants.LabelFoldoutTextureInputs);
                 var materialShaderInputToTextureSuffixMappingChildCount =
                     materialShaderInputToTextureSuffixMapping.childCount;
                 for (var j = 1; j < materialShaderInputToTextureSuffixMappingChildCount; j++)
@@ -644,15 +431,18 @@ namespace UnityPrefabWizard.Editor
                 }
                 
                 // 'Texture extension is ..."
-                var materialTextureExtension = currentVisualRule.Q<TextField>(LabelTextFieldTextureExtensionTarget).text;
+                var materialTextureExtension = currentVisualRule.Q<TextField>(
+                    Constants.LabelTextFieldTextureExtensionTarget).text;
                 currentRule.MaterialTextureExtension = materialTextureExtension;
 
                 // 'Assign all textures that match the <MeshName> + <Suffix>
-                var isMaterialAssignAllTexturesMatchMeshName = currentVisualRule.Q<Toggle>(LabelToggleAssignAllTexturesToMaterial).value;
+                var isMaterialAssignAllTexturesMatchMeshName = currentVisualRule.Q<Toggle>(
+                    Constants.LabelToggleAssignAllTexturesToMaterial).value;
                 currentRule.IsMaterialAssignAllTexturesMatchMeshName = isMaterialAssignAllTexturesMatchMeshName;
                 
                 // Assign the new material to the mesh
-                var isMaterialAssignMaterialToMesh = currentVisualRule.Q<Toggle>(LabelToggleAssignMaterialToMesh).value;
+                var isMaterialAssignMaterialToMesh = currentVisualRule.Q<Toggle>(
+                    Constants.LabelToggleAssignMaterialToMesh).value;
                 currentRule.IsMaterialAssignMaterialToMesh = isMaterialAssignMaterialToMesh;
                 
                 // Add the new rule to the active rule list
@@ -662,9 +452,6 @@ namespace UnityPrefabWizard.Editor
 
         private void UpdateRulesListViewContentsWithActiveRuleList()
         {
-            // source: _activeRuleList
-            // target: _rulesListView
-            
             var activeRuleCount = _activeRuleList.Count;
             _rulesListView.Clear();
 
@@ -678,7 +465,8 @@ namespace UnityPrefabWizard.Editor
                 
                 // 'Name starts with' foldout
                 var nameStartsWithEntryCount = currentRule.MeshNameStartsWith.Count;
-                var nameStartsWithFoldout = newRule.Q<Foldout>(LabelFoldoutIncludeNameStartsWith);
+                var nameStartsWithFoldout = newRule.Q<Foldout>(
+                    Constants.LabelFoldoutIncludeNameStartsWith);
                 for(var j = 0; j < nameStartsWithEntryCount; j++)
                 {
                     AddNewSingleEntryToFoldout(nameStartsWithFoldout, currentRule.MeshNameStartsWith[j]);
@@ -686,53 +474,66 @@ namespace UnityPrefabWizard.Editor
 
                 // 'Name contains' foldout
                 var nameContainsEntryCount = currentRule.MeshNameContains.Count;
-                var nameContainsFoldout = newRule.Q<Foldout>(LabelFoldoutIncludeNameContains);
+                var nameContainsFoldout = newRule.Q<Foldout>(
+                    Constants.LabelFoldoutIncludeNameContains);
                 for(var j = 0; j < nameContainsEntryCount; j++)
                 {
                     AddNewSingleEntryToFoldout(nameContainsFoldout, currentRule.MeshNameContains[j]);
                 }
 
                 // 'Use Mesh Name'
-                var isPrefabUseMeshName = newRule.Q<Toggle>(LabelToggleUseMeshName);
+                var isPrefabUseMeshName = newRule.Q<Toggle>(
+                    Constants.LabelToggleUseMeshName);
                 isPrefabUseMeshName.value = currentRule.IsPrefabUseMeshName;
                 
                 // 'Use Mesh Name, but Replace ... with ...'
-                var isPrefabUseMeshNameReplace = newRule.Q<Toggle>(LabelToggleUseMeshNameReplace);
+                var isPrefabUseMeshNameReplace = newRule.Q<Toggle>(
+                    Constants.LabelToggleUseMeshNameReplace);
                 isPrefabUseMeshNameReplace.value = currentRule.IsPrefabUseMeshNameReplace;
-                var isPrefabUseMeshNameReplaceSource = newRule.Q<TextField>(LabelTextFieldUseMeshNameReplaceSource);
+                var isPrefabUseMeshNameReplaceSource = newRule.Q<TextField>(
+                    Constants.LabelTextFieldUseMeshNameReplaceSource);
                 isPrefabUseMeshNameReplaceSource.value = currentRule.PrefabUseMeshNameReplaceSource;
-                var isPrefabUseMeshNameReplaceTarget = newRule.Q<TextField>(LabelTextFieldUseMeshNameReplaceTarget);
+                var isPrefabUseMeshNameReplaceTarget = newRule.Q<TextField>(
+                    Constants.LabelTextFieldUseMeshNameReplaceTarget);
                 isPrefabUseMeshNameReplaceTarget.value = currentRule.PrefabUseMeshNameReplaceTarget;
 
                 // 'Use Unique Name'
-                var isPrefabUseUniqueName = newRule.Q<Toggle>(LabelToggleUseUniqueName);
+                var isPrefabUseUniqueName = newRule.Q<Toggle>(
+                    Constants.LabelToggleUseUniqueName);
                 isPrefabUseUniqueName.value = currentRule.IsPrefabUseUniqueName;
-                var isPrefabUseUniqueNameTarget = newRule.Q<TextField>(LabelTextFieldUseUniqueNameTarget);
+                var isPrefabUseUniqueNameTarget = newRule.Q<TextField>(
+                    Constants.LabelTextFieldUseUniqueNameTarget);
                 isPrefabUseUniqueNameTarget.value = currentRule.PrefabUseUniqueNameTarget;
 
                 // 'Add Suffix'
-                var isPrefabAddSuffix = newRule.Q<Toggle>(LabelToggleAddSuffix);
+                var isPrefabAddSuffix = newRule.Q<Toggle>(
+                    Constants.LabelToggleAddSuffix);
                 isPrefabAddSuffix.value = currentRule.IsPrefabAddSuffix;
-                var isPrefabAddSuffixTarget = newRule.Q<TextField>(LabelTextFieldAddSuffixTarget);
+                var isPrefabAddSuffixTarget = newRule.Q<TextField>(
+                    Constants.LabelTextFieldAddSuffixTarget);
                 isPrefabAddSuffixTarget.value = currentRule.PrefabAddSuffixTarget;
                 
                 // 'Create Material for the Mesh'
-                var isMaterialCreateMaterialForMesh = newRule.Q<Toggle>(LabelToggleCreateMaterialForMesh);
+                var isMaterialCreateMaterialForMesh = newRule.Q<Toggle>(
+                    Constants.LabelToggleCreateMaterialForMesh);
                 isMaterialCreateMaterialForMesh.value = currentRule.IsMaterialCreateMaterialForMesh;
 
                 // 'Give it this shader'
-                var materialShaderTarget = newRule.Q<ObjectField>(LabelObjectFieldShader);
+                var materialShaderTarget = newRule.Q<ObjectField>(
+                    Constants.LabelObjectFieldShader);
                 var shader = AssetDatabase.LoadAssetAtPath<Shader>(currentRule.MaterialShaderTargetRelativePath);
                 materialShaderTarget.value = shader;
 
                 // 'For naming, use <MeshName> + ... (Mat)
-                var isMaterialMeshNamePlusSuffix = newRule.Q<Toggle>(LabelToggleMaterialUseMeshNamePlusSuffix);
+                var isMaterialMeshNamePlusSuffix = newRule.Q<Toggle>(
+                    Constants.LabelToggleMaterialUseMeshNamePlusSuffix);
                 isMaterialMeshNamePlusSuffix.value = currentRule.IsMaterialMeshNamePlusSuffix;
-                var materialMeshNameSuffixTarget = newRule.Q<TextField>(LabelTextFieldMaterialUseMeshNamePlusSuffixTarget);
+                var materialMeshNameSuffixTarget = newRule.Q<TextField>(
+                    Constants.LabelTextFieldMaterialUseMeshNamePlusSuffixTarget);
                 materialMeshNameSuffixTarget.value = currentRule.MaterialMeshNameSuffixTarget;
                 
                 var materialShaderInputToTextureSuffixMapping = newRule.Q<Foldout>(
-                    LabelFoldoutTextureInputs);
+                    Constants.LabelFoldoutTextureInputs);
                 materialShaderInputToTextureSuffixMapping.Clear();
                 foreach(var mapping in currentRule.MaterialShaderInputToTextureSuffixMapping)
                 {
@@ -743,15 +544,18 @@ namespace UnityPrefabWizard.Editor
                 }
                 
                 // 'Texture extension is ..."
-                var materialTextureExtension = newRule.Q<TextField>(LabelTextFieldTextureExtensionTarget);
+                var materialTextureExtension = newRule.Q<TextField>(
+                    Constants.LabelTextFieldTextureExtensionTarget);
                 materialTextureExtension.value = currentRule.MaterialTextureExtension;
 
                 // 'Assign all textures that match the <MeshName> + <Suffix>
-                var isMaterialAssignAllTexturesMatchMeshName = newRule.Q<Toggle>(LabelToggleAssignAllTexturesToMaterial);
+                var isMaterialAssignAllTexturesMatchMeshName = newRule.Q<Toggle>(
+                    Constants.LabelToggleAssignAllTexturesToMaterial);
                 isMaterialAssignAllTexturesMatchMeshName.value = currentRule.IsMaterialAssignAllTexturesMatchMeshName;
                 
                 // Assign the new material to the mesh
-                var isMaterialAssignMaterialToMesh = newRule.Q<Toggle>(LabelToggleAssignMaterialToMesh);
+                var isMaterialAssignMaterialToMesh = newRule.Q<Toggle>(
+                    Constants.LabelToggleAssignMaterialToMesh);
                 isMaterialAssignMaterialToMesh.value = currentRule.IsMaterialAssignMaterialToMesh;
             }
         }
