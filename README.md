@@ -33,11 +33,20 @@ With the tools provided in this repository ...
 Launch the _**Prefab Wizard**_ from the top menu bar under **Art Tools > Prefab Wizard**.
 
 ### Step 002
-Find ...
+#### Option A - Create some new reules
+#### Option B - Load some previously created rules
+
+### Step 003
+Edit the rules as necessary.
+Example
+
+### Step 004 
+Run the prefab creation
 
 *  *  *  *  *
 ## Architecture
 Below is a high level explanation of how the tools are architected.
 
 The primary components of the tools are:
-- test
+- A class called **PrefabWizardEditor** which is the primary entry point into the tool.
+- A class called 
