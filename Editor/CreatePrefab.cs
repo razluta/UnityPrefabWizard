@@ -9,15 +9,18 @@ namespace UnityPrefabWizard.Editor
 {
     public class CreatePrefab : UnityEditor.Editor
     {
-        public static void CreatePrefabForMesh(Object asset, List<Rule> rules)
+        public static List<string> CreatePrefabForMesh(Object asset, List<Rule> rules)
         {
+            var customLogger = new List<string>();
+            
             if (asset == null)
             {
                 EditorUtility.DisplayDialog(
                     Constants.TitleError, 
                     Constants.MessageErrorBodySelectOneMesh, 
                     Constants.LabelButtonErrorOk);
-                return;
+                customLogger.Add(Constants.MessageErrorBodySelectOneMesh);
+                return customLogger;
             }
             
             var selectedAssetPath = AssetDatabase.GetAssetPath(asset);
@@ -27,7 +30,8 @@ namespace UnityPrefabWizard.Editor
                     Constants.TitleError, 
                     Constants.MessageErrorBodySelectOneMesh, 
                     Constants.LabelButtonErrorOk);
-                return;
+                customLogger.Add(Constants.MessageErrorBodySelectOneMesh);
+                return customLogger;
             }
             
             // Check if the asset is a model
@@ -38,13 +42,14 @@ namespace UnityPrefabWizard.Editor
                     Constants.TitleError, 
                     Constants.MessageErrorBodySelectOneMesh, 
                     Constants.LabelButtonErrorOk);
-                return;
+                customLogger.Add(Constants.MessageErrorBodySelectOneMesh);
+                return customLogger;
             }
-            
+
             var assetDirectoryPath = Path.GetDirectoryName(selectedAssetPath);
             if (String.IsNullOrWhiteSpace(assetDirectoryPath))
             {
-                return;
+                return customLogger;
             }
             
             // Parse every rule in the rule list
@@ -69,8 +74,10 @@ namespace UnityPrefabWizard.Editor
 
                 if (!hasMetCondition)
                 {
-                    return;
+                    continue;
                 }
+                
+                customLogger.Add(Constants.MessageRuleMatch);
                 
                 // Instantiate the model in the current scene and name it in preparation for creating the prefab out of it
                 var modelInScene = (GameObject) Instantiate(asset);
@@ -100,16 +107,19 @@ namespace UnityPrefabWizard.Editor
                         modelInScene.name = rule.PrefabUseUniqueNameTarget;
                     }
                 }
+                customLogger.Add(Constants.MessageRenamedAssetUsing + modelInScene.name);
 
+                var newModelName = modelInScene.name;
                 // 'add suffix'
                 if (rule.IsPrefabAddSuffix)
                 {
                     if (!String.IsNullOrWhiteSpace(rule.PrefabAddSuffixTarget))
                     {
                         modelInScene.name += rule.PrefabAddSuffixTarget;
+                        customLogger.Add(Constants.MessageAddedPrefabSuffix + rule.PrefabAddSuffixTarget);
                     }
                 }
-                
+
                 // 'create a material for the mesh'
                 // 'give the material this shader'
                 if (!String.IsNullOrWhiteSpace(rule.MaterialShaderTargetRelativePath))
@@ -120,16 +130,18 @@ namespace UnityPrefabWizard.Editor
                         continue;
                     }
 
-                    var material = new Material(shader) {name = asset.name};
+                    var material = new Material(shader) {name = newModelName};
+                    customLogger.Add(Constants.MessageCreatedMaterialForMesh);
 
                     // 'for naming, use <MeshName> + custom string'
                     if (rule.IsMaterialMeshNamePlusSuffix)
                     {
                         if (!String.IsNullOrWhiteSpace(rule.MaterialMeshNameSuffixTarget))
                         {
-                            material.name = asset.name + rule.MaterialMeshNameSuffixTarget;
+                            material.name = newModelName + rule.MaterialMeshNameSuffixTarget;
                         }
                     }
+                    customLogger.Add(Constants.MessageMaterialName + material.name);
                     
                     // 'shader inputs and equivalent texture suffixes matchings'
                     foreach (var mapping in rule.MaterialShaderInputToTextureSuffixMapping)
@@ -153,6 +165,8 @@ namespace UnityPrefabWizard.Editor
                         
                         // Assign texture to the appropriate material slot
                         material.SetTexture(shaderProperty, texture);
+                        
+                        customLogger.Add(Constants.MessageTextureMatch + expectedTexturePath);
                     }
                     
                     var renderer = modelInScene.GetComponent<Renderer>();
@@ -168,6 +182,7 @@ namespace UnityPrefabWizard.Editor
 
                     // Apply the material to the sub-mesh
                     renderer.material = material;
+                    customLogger.Add(Constants.MessageAssignNewMaterialToMesh);
 
                     // Write all unsaved assets to disk
                     AssetDatabase.SaveAssets();
@@ -178,11 +193,13 @@ namespace UnityPrefabWizard.Editor
                     modelInScene,
                     Path.Combine(assetDirectoryPath, modelInScene.name + Constants.PrefabExtension),
                     InteractionMode.UserAction);
+                customLogger.Add(Constants.MessageNewPrefabCreated);
                 
                 // Cleanup - remove asset from scene
                 DestroyImmediate(modelInScene);
             }
-            
+
+            return customLogger;
         }
     }
 }
