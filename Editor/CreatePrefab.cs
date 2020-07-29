@@ -156,6 +156,11 @@ namespace UnityPrefabWizard.Editor
                     }
                     
                     var renderer = modelInScene.GetComponent<Renderer>();
+                    if (!renderer)
+                    {
+                        modelInScene.AddComponent<MeshRenderer>();
+                        renderer = modelInScene.GetComponent<Renderer>();
+                    }
                     
                     // Save the material to the same folder
                     AssetDatabase.CreateAsset(material, 
