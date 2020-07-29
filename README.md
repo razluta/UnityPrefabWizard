@@ -7,7 +7,7 @@ Verified on the following versions of Unity:
 - 2019.4
 - 2019.3
 
-![](https://github.com/razluta/UnityPrefabWizard/blob/master/Screenshots/UnityPrefabWizard.png)
+![](/Screenshots/UnityPrefabWizard.png)
 
 
 ## Setup
