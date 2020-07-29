@@ -5,7 +5,7 @@
         public const string VersionNumber = "v.0.1.0.20200727";
 
         public const int WindowWidth = 500;
-        public const int WindowHeight = 800;
+        public const int WindowHeight = 900;
         public const string WindowName = "Prefab Wizard";
         public const string WindowMenuPath = "Art Tools/" + WindowName;
         
@@ -59,6 +59,14 @@
         public const string LabelButtonErrorOk = "OK";
         public const string MessageSuccessfullySavedRules = "Successfully saved rules to path: ";
         public const string MessageSuccessfullyLoadedRules = "Successfully loaded rules from path: ";
+        public const string MessageRuleMatch = "- Rule Match:";
+        public const string MessageNewPrefabCreated = "-- New Prefab created.";
+        public const string MessageRenamedAssetUsing = "-- Renamed asset using: ";
+        public const string MessageAddedPrefabSuffix = "-- Asset name has the following Prefab suffix: ";
+        public const string MessageCreatedMaterialForMesh = "-- Created a new Material for the Prefab.";
+        public const string MessageMaterialName = "-- New Material name is: ";
+        public const string MessageTextureMatch = "--- Found a match for the Material input in this texture: ";
+        public const string MessageAssignNewMaterialToMesh = "-- Assigned the new Material to the new Prefab.";
     }
 }
 
