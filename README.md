@@ -24,7 +24,7 @@ Verified on the following versions of Unity:
 ```
 *  *  *  *  *
 ## Using the public API
-If you are using this repository to automate the creation of the packed texture in your own code, you'll need to use the:
+With the tools provided in this repository ...
 
 *  *  *  *  *
 
