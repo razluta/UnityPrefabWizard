@@ -58,6 +58,9 @@ Run the prefab creation
 
 ![](/Screenshots/UnityPrefabWizard_Log.png) 
 
+### Step 006 
+(Optional) Enjoy your automatically created assets!
+
 *  *  *  *  *
 ## Architecture
 Below is a high level explanation of how the tools are architected.
