@@ -33,13 +33,13 @@ Launch the _**Prefab Wizard**_ from the top menu bar under **Art Tools > Prefab 
 ### Step 002
 #### Option A - Create some new reules
 #### Option B - Load some previously created rules
-Press the **Load Rules** button. /
+Press the **Load Rules** button.
 ![](/Screenshots/UnityPrefabWizard_LoadRules.png)
-Navigate to the location of the previously saved rule file .JSON and load it. /
-The rule area will get automatically populated with the valid rules from the provided file. /
+Navigate to the location of the previously saved rule file .JSON and load it.
+The rule area will get automatically populated with the valid rules from the provided file.
 ![](/Screenshots/UnityPrefabWizard_LoadedRules.png)
 At this point, you can still edit the rules: in the example below, the tool will create a material for the mesh, give it a ShaderGraph as a shader, rename the material to be the mesh name + the suffix **__Mat** and finally match up all the textures that match the names (mesh name + the listed texture suffixes) with the right shader inputs.
- ![](/Screenshots/UnityPrefabWizard_EditRules.png)
+![](/Screenshots/UnityPrefabWizard_EditRules.png)
 
 ### Step 003
 Edit the rules as necessary.
