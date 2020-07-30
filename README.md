@@ -1,5 +1,3 @@
-!!! THIS IS A WORK IN PROGRESS AND IT IS NOT CURRENTLY FUNCTIONAL !!!
-
 # UnityPrefabWizard [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg?style=flat)](http://mit-license.org)
 This is a set of Unity utility functions for automatically creating prefabs for 3D assets (with shader assignment, material creation and texture assignments), nicely wrapped in a friendly GUI.
 
