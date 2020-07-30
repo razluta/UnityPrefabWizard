@@ -52,7 +52,8 @@
 
         public const string LabelButtonAddTextureInputMatching = "BT_AddTextureInputMatching";
         public const string LabelButtonRemove = "BT_Remove";
-        
+
+        public const string TextButtonAddNewField = "Add New Field";
         public const string TitleError = "Error";
         public const string MessageErrorBodySelectOneMesh = "Please select one mesh in the project window!";
         public const string MessageErrorTextureDoesNotExist = "The expected texture does not exist in the project: ";

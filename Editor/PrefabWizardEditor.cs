@@ -547,6 +547,14 @@ namespace UnityPrefabWizard.Editor
                 var materialShaderInputToTextureSuffixMapping = newRule.Q<Foldout>(
                     Constants.LabelFoldoutTextureInputs);
                 materialShaderInputToTextureSuffixMapping.Clear();
+                var textureInputFoldout = materialShaderInputToTextureSuffixMapping.Q<Foldout>(Constants.LabelFoldoutTextureInputs);
+                var textureInputsButton = new Button()
+                {
+                    name=Constants.LabelButtonAddTextureInputMatching,
+                    text=Constants.TextButtonAddNewField
+                };
+                textureInputsButton.clickable.clicked += () => AddNewDoubleEntryToFoldout(textureInputFoldout);
+                materialShaderInputToTextureSuffixMapping.Add(textureInputsButton);
                 foreach(var mapping in currentRule.MaterialShaderInputToTextureSuffixMapping)
                 {
                     AddNewDoubleEntryToFoldout(
