@@ -54,7 +54,9 @@ Example
 Run the prefab creation
 
 ### Step 005 
-Check the log
+(Optional) Finally, check the log area to see what actually happend in the process and look for potential errors or unintended results.
+
+![](/Screenshots/UnityPrefabWizard_Log.png) 
 
 *  *  *  *  *
 ## Architecture
