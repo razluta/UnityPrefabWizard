@@ -53,6 +53,9 @@ Example
 ### Step 004 
 Run the prefab creation
 
+### Step 005 
+Check the log
+
 *  *  *  *  *
 ## Architecture
 Below is a high level explanation of how the tools are architected.
