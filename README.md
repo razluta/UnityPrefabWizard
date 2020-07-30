@@ -38,7 +38,7 @@ Press the **Load Rules** button.
 ![](/Screenshots/UnityPrefabWizard_LoadRules.png)
 
 Navigate to the location of the previously saved rule file .JSON and load it. \
-The rule area will get automatically populated with the valid rules from the provided file. \
+The rule area will get automatically populated with the valid rules from the provided file.
 
 ![](/Screenshots/UnityPrefabWizard_LoadedRules.png)
 
