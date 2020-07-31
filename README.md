@@ -48,7 +48,7 @@ At this point, you can still edit the rules: in the example below, the tool will
 
 ### Step 003
 Edit the rules as necessary.
-Example
+Example 
 
 ### Step 004 
 Run the prefab creation
