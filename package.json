@@ -1,10 +1,16 @@
 {
-  "author": "Razvan Luta",
-  "description": "A set of Unity utility functions for automatically creating prefabs for 3D assets, nicely wrapped in a friendly GUI.",
-  "displayName": "Unity Prefab Wizard",
-  "license": "MIT",
   "name": "com.razluta.unityprefabwizard",
+  "displayName": "Unity Prefab Wizard",
+  "description": "A set of Unity utility functions for automatically creating prefabs for 3D assets, nicely wrapped in a friendly GUI.",
+  "license": "MIT",
+  "author": {
+    "name": "Razvan Luta",
+    "url": "https://github.com/razluta/UnityPrefabWizard"
+  },
   "unity": "2019.3",
   "unityRelease": "0f1",
-  "version": "1.0.0"
+  "version": "1.0.1",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  }
 }
